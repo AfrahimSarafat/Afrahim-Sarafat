@@ -3,11 +3,13 @@ import {
   Mail,
   Phone,
   MapPin,
-  Dribbble,
+  MessageCircle,
+  Facebook,
   Instagram,
   Linkedin,
   ArrowRight,
   CheckCircle2,
+  AlertCircle,
 } from "lucide-react";
 import { ProfileData } from "../portfolioData";
 
@@ -19,16 +21,54 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    type: "product",
-    budget: "5-15",
+    type: "Graphic Design",
+    budget: "৳5,000–৳10,000",
     message: "",
   });
 
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [needsActivationNote, setNeedsActivationNote] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Exact contact information requested
+  const contactEmail = "hmsarafat6@gmail.com";
+  const contactPhone = "+8801608-201844";
+  const contactLocation = "Dhaka, Bangladesh";
+
+  // Exactly 4 social channels with tooltips and exact links
+  const socialChannels = [
+    {
+      id: "whatsapp",
+      name: "WhatsApp",
+      url: "https://wa.me/8801608201844",
+      icon: MessageCircle,
+      tooltipColor: "bg-[#0e261f]",
+    },
+    {
+      id: "facebook",
+      name: "Facebook",
+      url: profile.contact.facebookUrl || "https://www.facebook.com/share/1EBGJ4XRRo/",
+      icon: Facebook,
+      tooltipColor: "bg-[#0e261f]",
+    },
+    {
+      id: "instagram",
+      name: "Instagram",
+      url: profile.contact.instagramUrl || "https://www.instagram.com/afrahim_sarafat/",
+      icon: Instagram,
+      tooltipColor: "bg-[#0e261f]",
+    },
+    {
+      id: "linkedin",
+      name: "LinkedIn",
+      url: profile.contact.linkedinUrl || "https://www.linkedin.com/in/afrahim-sarafat-3b6348437/",
+      icon: Linkedin,
+      tooltipColor: "bg-[#0e261f]",
+    },
+  ];
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
       setErrorMsg("Please fill out all required fields.");
@@ -37,12 +77,47 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
 
     setErrorMsg("");
     setIsSubmitting(true);
+    setNeedsActivationNote(false);
 
-    // Simulate reliable submission
-    setTimeout(() => {
+    try {
+      // Direct email delivery via FormSubmit ajax endpoint to deliver straight to hmsarafat6@gmail.com on Vercel
+      const response = await fetch(`https://formsubmit.co/ajax/${contactEmail}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          Name: formData.name.trim(),
+          Email: formData.email.trim(),
+          Service: formData.type,
+          Budget: formData.budget,
+          Message: formData.message.trim(),
+          _subject: `New Portfolio Message from ${formData.name.trim()} (${formData.type})`,
+          _template: "table",
+          _captcha: "false",
+        }),
+      });
+
+      const data = await response.json().catch(() => null);
+
+      if (response.ok || (data && (data.success === "true" || data.message?.includes("Activation")))) {
+        if (data?.message?.includes("Activation")) {
+          setNeedsActivationNote(true);
+        }
+        setIsSubmitting(false);
+        setSubmitted(true);
+      } else {
+        throw new Error(data?.message || "Failed to deliver message");
+      }
+    } catch (err: any) {
+      console.warn("Form submission error:", err);
+      // Fallback: still notify the user and provide instant direct email option
+      setErrorMsg(
+        "Could not send automatically. Please click below to send via your email app."
+      );
       setIsSubmitting(false);
-      setSubmitted(true);
-    }, 600);
+    }
   };
 
   return (
@@ -80,10 +155,10 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
                     Email
                   </span>
                   <a
-                    href={`mailto:${profile.contact.email}`}
+                    href={`mailto:${contactEmail}`}
                     className="font-medium hover:text-[#d98d12] transition-colors"
                   >
-                    {profile.contact.email}
+                    {contactEmail}
                   </a>
                 </div>
               </li>
@@ -97,10 +172,10 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
                     Phone
                   </span>
                   <a
-                    href={`tel:${profile.contact.phone.replace(/\s+/g, "")}`}
+                    href={`tel:${contactPhone.replace(/\s+/g, "")}`}
                     className="font-medium hover:text-[#d98d12] transition-colors"
                   >
-                    {profile.contact.phone}
+                    {contactPhone}
                   </a>
                 </div>
               </li>
@@ -111,51 +186,50 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
                 </div>
                 <div>
                   <span className="block text-[11px] font-semibold uppercase tracking-wider text-[#71827a]">
-                    Based in
+                    Location
                   </span>
                   <span className="font-medium text-[#273a31]">
-                    {profile.contact.location}
+                    {contactLocation}
                   </span>
                 </div>
               </li>
             </ul>
 
-            {/* Social Links */}
+            {/* Exactly 4 Social Channel Icons with Hover Tooltips */}
             <div className="pt-2">
+              <span className="block text-[11px] font-semibold uppercase tracking-wider text-[#71827a] mb-3">
+                Connect Directly
+              </span>
               <ul className="flex items-center gap-3.5 text-[#374941]">
-                <li>
-                  <a
-                    href={profile.contact.dribbbleUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="w-10 h-10 rounded-full border border-[#d6cfbe] hover:border-[#d98d12] hover:text-[#d98d12] flex items-center justify-center transition-all"
-                    aria-label="Dribbble"
-                  >
-                    <Dribbble className="w-4 h-4" />
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href={profile.contact.instagramUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="w-10 h-10 rounded-full border border-[#d6cfbe] hover:border-[#d98d12] hover:text-[#d98d12] flex items-center justify-center transition-all"
-                    aria-label="Instagram"
-                  >
-                    <Instagram className="w-4 h-4" />
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href={profile.contact.linkedinUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="w-10 h-10 rounded-full border border-[#d6cfbe] hover:border-[#d98d12] hover:text-[#d98d12] flex items-center justify-center transition-all"
-                    aria-label="LinkedIn"
-                  >
-                    <Linkedin className="w-4 h-4" />
-                  </a>
-                </li>
+                {socialChannels.map((channel) => {
+                  const Icon = channel.icon;
+                  return (
+                    <li key={channel.id} className="relative group/tooltip">
+                      <a
+                        href={channel.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-11 h-11 rounded-full border border-[#d6cfbe] bg-[#f2ede0] text-[#2b3e34] hover:border-[#d98d12] hover:bg-[#d98d12] hover:text-[#0e261f] flex items-center justify-center transition-all duration-200 shadow-sm active:scale-95"
+                        aria-label={channel.name}
+                        title={channel.name}
+                      >
+                        <Icon className="w-4 h-4" />
+                      </a>
+
+                      {/* Tooltip on hover */}
+                      <div
+                        role="tooltip"
+                        className="absolute -top-9 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded-md bg-[#0e261f] text-white text-[11px] font-medium tracking-wide shadow-xl pointer-events-none opacity-0 group-hover/tooltip:opacity-100 -translate-y-1 group-hover/tooltip:translate-y-0 transition-all duration-200 whitespace-nowrap z-30"
+                      >
+                        {channel.name}
+                        <div
+                          className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[#0e261f]"
+                          aria-hidden="true"
+                        />
+                      </div>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           </div>
@@ -169,11 +243,17 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
                     <CheckCircle2 className="w-8 h-8" />
                   </div>
                   <h3 className="font-display font-bold text-2xl text-[#11241d]">
-                    Message received!
+                    Message sent successfully!
                   </h3>
                   <p className="text-sm text-[#4d5e56] max-w-md mx-auto leading-relaxed">
-                    Thanks for reaching out — your message is on its way to {profile.name}. I'll review what you shared and get back to you within two working days.
+                    Thank you for reaching out! Your message details have been delivered to{" "}
+                    <strong className="text-[#11241d]">{contactEmail}</strong>. I will review your inquiry and reply within two working days.
                   </p>
+                  {needsActivationNote && (
+                    <div className="p-3 bg-amber-500/10 border border-amber-500/30 text-amber-900 rounded-xl text-xs max-w-md mx-auto text-left">
+                      <strong>Note:</strong> If this is the very first form submission, please check your inbox ({contactEmail}) and click the one-time "Activate Form" confirmation email from FormSubmit.
+                    </div>
+                  )}
                   <button
                     type="button"
                     onClick={() => {
@@ -181,8 +261,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
                       setFormData({
                         name: "",
                         email: "",
-                        type: "product",
-                        budget: "5-15",
+                        type: "Graphic Design",
+                        budget: "৳5,000–৳10,000",
                         message: "",
                       });
                     }}
@@ -194,8 +274,21 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-5" noValidate>
                   {errorMsg && (
-                    <div className="p-3 text-xs bg-rose-500/10 border border-rose-500/20 text-rose-800 rounded-xl">
-                      {errorMsg}
+                    <div className="p-3.5 text-xs bg-rose-500/10 border border-rose-500/20 text-rose-800 rounded-xl flex items-start gap-2">
+                      <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-600" />
+                      <div className="space-y-1.5">
+                        <p>{errorMsg}</p>
+                        <a
+                          href={`mailto:${contactEmail}?subject=${encodeURIComponent(
+                            `Portfolio Inquiry: ${formData.type}`
+                          )}&body=${encodeURIComponent(
+                            `Name: ${formData.name}\nEmail: ${formData.email}\nBudget: ${formData.budget}\n\nMessage:\n${formData.message}`
+                          )}`}
+                          className="inline-block font-bold underline hover:text-rose-950"
+                        >
+                          Click here to send via your email client
+                        </a>
+                      </div>
                     </div>
                   )}
 
@@ -242,7 +335,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
                       htmlFor="cf-type"
                       className="block text-xs font-semibold uppercase tracking-wider text-[#43554d] mb-1.5"
                     >
-                      What do you need?
+                      WHAT DO YOU NEED?
                     </label>
                     <select
                       id="cf-type"
@@ -250,11 +343,17 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
                       onChange={(e) => setFormData({ ...formData, type: e.target.value })}
                       className="w-full px-4 py-3 rounded-xl bg-[#f7f4ec] border border-[#d5cebd] focus:border-[#d98d12] focus:ring-1 focus:ring-[#d98d12] text-sm text-[#11241d] outline-none transition-all cursor-pointer"
                     >
-                      <option value="product">Product design (UX/UI)</option>
-                      <option value="brand">Brand &amp; identity</option>
-                      <option value="system">Design system</option>
-                      <option value="direction">Art direction</option>
-                      <option value="other">Something else</option>
+                      <option value="Graphic Design">Graphic Design</option>
+                      <option value="Logo Design & Brand Identity">Logo Design &amp; Brand Identity</option>
+                      <option value="Social Media Design">Social Media Design</option>
+                      <option value="Presentation Design">Presentation Design</option>
+                      <option value="Print Design">Print Design</option>
+                      <option value="Video Editing">Video Editing</option>
+                      <option value="Short-form Video Editing">Short-form Video Editing</option>
+                      <option value="Long-form Video Editing">Long-form Video Editing</option>
+                      <option value="Motion Graphics">Motion Graphics</option>
+                      <option value="Promotional / Ad Video">Promotional / Ad Video</option>
+                      <option value="Other">Other</option>
                     </select>
                   </div>
 
@@ -263,7 +362,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
                       htmlFor="cf-budget"
                       className="block text-xs font-semibold uppercase tracking-wider text-[#43554d] mb-1.5"
                     >
-                      Rough budget
+                      ROUGH BUDGET
                     </label>
                     <select
                       id="cf-budget"
@@ -271,10 +370,12 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
                       onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
                       className="w-full px-4 py-3 rounded-xl bg-[#f7f4ec] border border-[#d5cebd] focus:border-[#d98d12] focus:ring-1 focus:ring-[#d98d12] text-sm text-[#11241d] outline-none transition-all cursor-pointer"
                     >
-                      <option value="lt5">Under €5k</option>
-                      <option value="5-15">€5k – €15k</option>
-                      <option value="15-40">€15k – €40k</option>
-                      <option value="40plus">€40k+</option>
+                      <option value="Below ৳5,000">Below ৳5,000</option>
+                      <option value="৳5,000–৳10,000">৳5,000–৳10,000</option>
+                      <option value="৳10,000–৳20,000">৳10,000–৳20,000</option>
+                      <option value="৳20,000–৳50,000">৳20,000–৳50,000</option>
+                      <option value="৳50,000+">৳50,000+</option>
+                      <option value="Not sure yet">Not sure yet</option>
                     </select>
                   </div>
 
@@ -291,7 +392,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
                       rows={4}
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      placeholder="What are you building, and what does success look like?"
+                      placeholder="Tell me about your project, goals, and what you’d like to create."
                       className="w-full px-4 py-3 rounded-xl bg-[#f7f4ec] border border-[#d5cebd] focus:border-[#d98d12] focus:ring-1 focus:ring-[#d98d12] text-sm text-[#11241d] placeholder:text-[#889890] outline-none transition-all resize-y"
                     />
                   </div>
@@ -299,14 +400,14 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-[#d98d12] hover:bg-[#c27c0d] active:scale-[0.99] text-[#0d221b] font-display font-bold text-sm tracking-wide transition-all shadow-md shadow-[#d98d12]/20"
+                    className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-[#d98d12] hover:bg-[#c27c0d] active:scale-[0.99] disabled:opacity-75 disabled:cursor-not-allowed text-[#0d221b] font-display font-bold text-sm tracking-wide transition-all shadow-md shadow-[#d98d12]/20 cursor-pointer"
                   >
-                    <span>{isSubmitting ? "Sending..." : "Send message"}</span>
+                    <span>{isSubmitting ? "Sending..." : "Send Message"}</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
 
                   <p className="text-[11px] text-[#6b7d75] text-center">
-                    I treat your project details confidentially. No spam, ever.
+                    Submissions are delivered directly to {contactEmail}. No spam, ever.
                   </p>
                 </form>
               )}

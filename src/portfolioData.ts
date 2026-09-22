@@ -69,6 +69,7 @@ export interface ProfileData {
     email: string;
     phone: string;
     location: string;
+    whatsappUrl?: string;
     dribbbleUrl?: string;
     instagramUrl: string;
     linkedinUrl: string;
@@ -106,9 +107,10 @@ export const INITIAL_PROFILE: ProfileData = {
     happyClients: 22,
   },
   contact: {
-    email: "hmsharafat6@gmail.com",
-    phone: "+351 910 000 000",
-    location: "Working Worldwide & Remote",
+    email: "hmsarafat6@gmail.com",
+    phone: "+8801608-201844",
+    location: "Dhaka, Bangladesh",
+    whatsappUrl: "https://wa.me/8801608201844",
     dribbbleUrl: "https://dribbble.com",
     instagramUrl: "https://www.instagram.com/afrahim_sarafat/",
     linkedinUrl: "https://www.linkedin.com/in/afrahim-sarafat-3b6348437/",
