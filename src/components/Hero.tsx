@@ -1,5 +1,6 @@
 import React from "react";
 import { ArrowRight, Linkedin, Instagram, Youtube, Facebook } from "lucide-react";
+import { motion } from "motion/react";
 import { ProfileData } from "../portfolioData";
 
 interface HeroProps {
@@ -58,10 +59,17 @@ export const Hero: React.FC<HeroProps> = ({ profile }) => {
               <span>Available for Projects</span>
             </div>
 
-            {/* Main Name Heading */}
-            <h1
+            {/* Main Name Heading with smooth inside-out scale popup animation on entry/scroll */}
+            <motion.h1
               id="hero-name"
-              className="font-display font-extrabold tracking-tight text-[#11241d] leading-[1.05]"
+              initial={{ opacity: 0, scale: 0.84, filter: "blur(4px)" }}
+              whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+              viewport={{ once: false, amount: 0.3 }}
+              transition={{
+                duration: 1.15,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              className="font-display font-extrabold tracking-tight text-[#11241d] leading-[1.05] origin-left"
             >
               <span className="block text-2xl sm:text-3xl lg:text-4xl font-bold text-[#34483e] mb-2 sm:mb-3">
                 Hi, I am
@@ -70,7 +78,7 @@ export const Hero: React.FC<HeroProps> = ({ profile }) => {
                 {profile.firstName}{" "}
                 <span className="text-[#d98d12]">{profile.lastNameAccent}</span>
               </span>
-            </h1>
+            </motion.h1>
 
             {/* Role */}
             <p className="font-display font-semibold text-lg sm:text-xl text-[#23382f]">
@@ -144,7 +152,7 @@ export const Hero: React.FC<HeroProps> = ({ profile }) => {
               />
 
               {/* Main portrait frame */}
-              <div className="relative z-10 rounded-[2.2rem] overflow-hidden border-2 border-[#132c25]/15 bg-[#142e26] shadow-2xl aspect-[4/5]">
+              <div className="relative z-10 rounded-[2.2rem] overflow-hidden border-2 border-[#132c25]/15 bg-[#142e26] shadow-2xl aspect-[4/5] group">
                 <img
                   src={profile.heroImage}
                   alt={`Portrait of ${profile.name}`}
@@ -152,6 +160,49 @@ export const Hero: React.FC<HeroProps> = ({ profile }) => {
                   loading="eager"
                   referrerPolicy="no-referrer"
                 />
+
+                {/* CC Light Sweep Effect: Specular light beam sweeping from top-left to bottom-right */}
+                <div
+                  className="absolute inset-0 pointer-events-none overflow-hidden z-20"
+                  aria-hidden="true"
+                >
+                  <motion.div
+                    className="absolute -top-[120%] -left-[120%] w-[340%] h-[340%]"
+                    style={{
+                      background:
+                        "linear-gradient(135deg, rgba(255,255,255,0) 38%, rgba(255,255,255,0.06) 43%, rgba(255,255,255,0.65) 50%, rgba(255,255,255,0.08) 57%, rgba(255,255,255,0) 62%)",
+                      mixBlendMode: "overlay",
+                    }}
+                    animate={{
+                      x: ["-38%", "38%"],
+                      y: ["-38%", "38%"],
+                    }}
+                    transition={{
+                      duration: 3.2,
+                      repeat: Infinity,
+                      repeatDelay: 1.8,
+                      ease: [0.4, 0, 0.2, 1],
+                    }}
+                  />
+                  <motion.div
+                    className="absolute -top-[120%] -left-[120%] w-[340%] h-[340%]"
+                    style={{
+                      background:
+                        "linear-gradient(135deg, rgba(255,255,255,0) 47%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 53%)",
+                      mixBlendMode: "screen",
+                    }}
+                    animate={{
+                      x: ["-38%", "38%"],
+                      y: ["-38%", "38%"],
+                    }}
+                    transition={{
+                      duration: 3.2,
+                      repeat: Infinity,
+                      repeatDelay: 1.8,
+                      ease: [0.4, 0, 0.2, 1],
+                    }}
+                  />
+                </div>
               </div>
             </div>
           </div>

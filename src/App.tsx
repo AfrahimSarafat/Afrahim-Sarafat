@@ -5,7 +5,6 @@ import { ToolsMarquee } from "./components/ToolsMarquee";
 import { AboutSection } from "./components/AboutSection";
 import { ServicesSection } from "./components/ServicesSection";
 import { WorkSection } from "./components/WorkSection";
-import { TestimonialsSection } from "./components/TestimonialsSection";
 import { ContactSection } from "./components/ContactSection";
 import { Footer } from "./components/Footer";
 import { CaseStudyModal } from "./components/CaseStudyModal";
@@ -102,8 +101,10 @@ export default function App() {
         {/* 4. About Section */}
         <AboutSection profile={profile} />
 
-        {/* Testimonials Voices Section */}
-        <TestimonialsSection />
+        {/* Thin divider border matching the color of the section above About (Services #0e261f) */}
+        <div className="w-full bg-[#f7f4ec] px-4 sm:px-6 lg:px-8" aria-hidden="true">
+          <div className="max-w-6xl mx-auto border-t border-[#0e261f]/25" />
+        </div>
 
         {/* 5. Contact Section */}
         <ContactSection profile={profile} />

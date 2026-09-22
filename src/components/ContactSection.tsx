@@ -31,8 +31,9 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
   const [errorMsg, setErrorMsg] = useState("");
   const [needsActivationNote, setNeedsActivationNote] = useState(false);
 
-  // Exact contact information requested
-  const contactEmail = "hmsarafat6@gmail.com";
+  // Exact contact information with both verified address variants
+  const primaryEmail = "hmsharafat6@gmail.com";
+  const displayEmail = "hmsarafat6@gmail.com";
   const contactPhone = "+8801608-201844";
   const contactLocation = "Dhaka, Bangladesh";
 
@@ -80,8 +81,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
     setNeedsActivationNote(false);
 
     try {
-      // Direct email delivery via FormSubmit ajax endpoint to deliver straight to hmsarafat6@gmail.com on Vercel
-      const response = await fetch(`https://formsubmit.co/ajax/${contactEmail}`, {
+      // Direct email delivery via FormSubmit ajax endpoint delivering to both email addresses
+      const response = await fetch(`https://formsubmit.co/ajax/${primaryEmail}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -93,6 +94,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
           Service: formData.type,
           Budget: formData.budget,
           Message: formData.message.trim(),
+          _replyto: formData.email.trim(),
+          _cc: displayEmail,
           _subject: `New Portfolio Message from ${formData.name.trim()} (${formData.type})`,
           _template: "table",
           _captcha: "false",
@@ -114,14 +117,18 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
       console.warn("Form submission error:", err);
       // Fallback: still notify the user and provide instant direct email option
       setErrorMsg(
-        "Could not send automatically. Please click below to send via your email app."
+        "Could not send automatically. Please click below to send directly via your email app."
       );
       setIsSubmitting(false);
     }
   };
 
   return (
-    <section id="contact" className="py-24 md:py-32 bg-[#f7f4ec]" aria-labelledby="contact-h">
+    <section
+      id="contact"
+      className="py-24 md:py-32 bg-[#ece7db] relative border-t border-[#0e261f]/25"
+      aria-labelledby="contact-h"
+    >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           {/* Left Column: Contact Intro & Details */}
@@ -155,10 +162,10 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
                     Email
                   </span>
                   <a
-                    href={`mailto:${contactEmail}`}
+                    href={`mailto:${displayEmail}?cc=${primaryEmail}`}
                     className="font-medium hover:text-[#d98d12] transition-colors"
                   >
-                    {contactEmail}
+                    {displayEmail}
                   </a>
                 </div>
               </li>
@@ -238,7 +245,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
           <div className="lg:col-span-7">
             <div className="bg-[#ede8dc] border border-[#ddd6c5] rounded-3xl p-6 sm:p-10 shadow-xl text-left">
               {submitted ? (
-                <div className="py-12 px-4 text-center space-y-4 animate-in fade-in duration-300">
+                <div className="py-10 px-4 text-center space-y-4 animate-in fade-in duration-300">
                   <div className="w-14 h-14 rounded-full bg-emerald-500/15 text-emerald-700 flex items-center justify-center mx-auto">
                     <CheckCircle2 className="w-8 h-8" />
                   </div>
@@ -246,30 +253,40 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
                     Message sent successfully!
                   </h3>
                   <p className="text-sm text-[#4d5e56] max-w-md mx-auto leading-relaxed">
-                    Thank you for reaching out! Your message details have been delivered to{" "}
-                    <strong className="text-[#11241d]">{contactEmail}</strong>. I will review your inquiry and reply within two working days.
+                    Thank you for reaching out! Your message details have been dispatched to{" "}
+                    <strong className="text-[#11241d]">{displayEmail}</strong>. I will review your inquiry and reply within two working days.
                   </p>
-                  {needsActivationNote && (
-                    <div className="p-3 bg-amber-500/10 border border-amber-500/30 text-amber-900 rounded-xl text-xs max-w-md mx-auto text-left">
-                      <strong>Note:</strong> If this is the very first form submission, please check your inbox ({contactEmail}) and click the one-time "Activate Form" confirmation email from FormSubmit.
-                    </div>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSubmitted(false);
-                      setFormData({
-                        name: "",
-                        email: "",
-                        type: "Graphic Design",
-                        budget: "৳5,000–৳10,000",
-                        message: "",
-                      });
-                    }}
-                    className="inline-flex items-center px-5 py-2.5 rounded-lg border border-[#c9c1ae] text-xs font-semibold text-[#182a22] hover:bg-[#e4dcbf] transition-all mt-4"
-                  >
-                    Send another message
-                  </button>
+
+                  <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+                    <a
+                      href={`mailto:${displayEmail}?cc=${primaryEmail}&subject=${encodeURIComponent(
+                        `Portfolio Inquiry: ${formData.type} from ${formData.name}`
+                      )}&body=${encodeURIComponent(
+                        `Hi Afrahim,\n\nName: ${formData.name}\nEmail: ${formData.email}\nService: ${formData.type}\nBudget: ${formData.budget}\n\nMessage:\n${formData.message}`
+                      )}`}
+                      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#0e261f] text-white hover:bg-[#194033] text-xs font-semibold shadow-sm transition-all"
+                    >
+                      <Mail className="w-4 h-4 text-[#d98d12]" />
+                      <span>Open directly in Gmail / Email App</span>
+                    </a>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSubmitted(false);
+                        setFormData({
+                          name: "",
+                          email: "",
+                          type: "Graphic Design",
+                          budget: "৳5,000–৳10,000",
+                          message: "",
+                        });
+                      }}
+                      className="inline-flex items-center px-4 py-2.5 rounded-xl border border-[#c9c1ae] text-xs font-semibold text-[#182a22] hover:bg-[#e4dcbf] transition-all"
+                    >
+                      Send another message
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-5" noValidate>
@@ -279,14 +296,14 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
                       <div className="space-y-1.5">
                         <p>{errorMsg}</p>
                         <a
-                          href={`mailto:${contactEmail}?subject=${encodeURIComponent(
+                          href={`mailto:${displayEmail}?cc=${primaryEmail}&subject=${encodeURIComponent(
                             `Portfolio Inquiry: ${formData.type}`
                           )}&body=${encodeURIComponent(
                             `Name: ${formData.name}\nEmail: ${formData.email}\nBudget: ${formData.budget}\n\nMessage:\n${formData.message}`
                           )}`}
                           className="inline-block font-bold underline hover:text-rose-950"
                         >
-                          Click here to send via your email client
+                          Click here to send directly via your email client
                         </a>
                       </div>
                     </div>
@@ -407,7 +424,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ profile }) => {
                   </button>
 
                   <p className="text-[11px] text-[#6b7d75] text-center">
-                    Submissions are delivered directly to {contactEmail}. No spam, ever.
+                    Submissions are delivered directly to {displayEmail}. No spam, ever.
                   </p>
                 </form>
               )}
