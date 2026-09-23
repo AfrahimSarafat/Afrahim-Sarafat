@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   ArrowUpRight,
   Play,
@@ -9,6 +9,9 @@ import {
   ExternalLink,
   ChevronLeft,
   ChevronRight,
+  Volume2,
+  VolumeX,
+  Maximize2,
 } from "lucide-react";
 import { ProjectItem, VideoItem, PROJECTS_LIST, VIDEOS_LIST } from "../portfolioData";
 import { VideoPlayerModal } from "./VideoPlayerModal";
@@ -672,7 +675,7 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ onSelectProject, onSel
 };
 
 // ========================================================
-// Sub-Component: Video Card
+// Sub-Component: Video Card with Cursor Hover & Mobile In-View Autoplay
 // ========================================================
 interface VideoCardProps {
   video: VideoItem;
@@ -681,60 +684,197 @@ interface VideoCardProps {
 
 const VideoCard: React.FC<VideoCardProps> = ({ video, onPlay }) => {
   const isShort = video.type === "short-form";
+  const [isHovered, setIsHovered] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+  const cardRef = useRef<HTMLElement>(null);
+  const hoverTimeoutRef = useRef<number | null>(null);
+
+  // Mobile / Tablet view: Play automatically when video scrolls into view
+  useEffect(() => {
+    const cardEl = cardRef.current;
+    if (!cardEl) return;
+
+    // Detect if device is touch or mobile/tablet screen
+    const isMobileOrTablet = () => {
+      if (typeof window === "undefined") return false;
+      return (
+        window.innerWidth < 1024 ||
+        window.matchMedia("(hover: none)").matches ||
+        "ontouchstart" in window ||
+        navigator.maxTouchPoints > 0
+      );
+    };
+
+    if (!isMobileOrTablet()) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+            setIsInView(true);
+          } else if (entry.intersectionRatio < 0.25) {
+            setIsInView(false);
+          }
+        });
+      },
+      {
+        threshold: [0, 0.25, 0.5, 0.75],
+        rootMargin: "0px",
+      }
+    );
+
+    observer.observe(cardEl);
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  // Desktop view: Play automatically when cursor hovers
+  const handleMouseEnter = () => {
+    if (hoverTimeoutRef.current) {
+      window.clearTimeout(hoverTimeoutRef.current);
+    }
+    // 100ms debounce to prevent flashing when casually moving cursor across screen
+    hoverTimeoutRef.current = window.setTimeout(() => {
+      setIsHovered(true);
+    }, 100);
+  };
+
+  const handleMouseLeave = () => {
+    if (hoverTimeoutRef.current) {
+      window.clearTimeout(hoverTimeoutRef.current);
+    }
+    setIsHovered(false);
+  };
+
+  const isPlaying = isHovered || isInView;
 
   return (
     <article
+      ref={cardRef}
       onClick={onPlay}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       className={`group relative rounded-2xl overflow-hidden bg-[#0d221a] cursor-pointer shadow-md hover:shadow-2xl transition-all duration-300 flex flex-col justify-between border border-[#1b3d30]/60 ${
         isShort ? "aspect-[9/15]" : "aspect-[16/10]"
       }`}
     >
-      {/* Thumbnail Image */}
+      {/* Thumbnail Image (always present in background for instant fallback) */}
       <img
         src={video.thumbnailUrl}
         alt={video.title}
-        className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+        className={`absolute inset-0 w-full h-full object-cover object-center transition-all duration-700 ease-out ${
+          isPlaying ? "opacity-0 scale-100" : "opacity-100 group-hover:scale-105"
+        }`}
         loading="lazy"
         referrerPolicy="no-referrer"
       />
 
+      {/* Autoplay Video Iframe (Runs on Hover for PC, or when in display for Mobile/Tablet) */}
+      {isPlaying && (
+        <div className="absolute inset-0 w-full h-full bg-black overflow-hidden z-0">
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${video.youtubeId}?autoplay=1&mute=${
+              isMuted ? 1 : 0
+            }&loop=1&playlist=${video.youtubeId}&playsinline=1&controls=0&modestbranding=1&rel=0&iv_load_policy=3&enablejsapi=1`}
+            title={video.title}
+            className="w-full h-full border-0 pointer-events-none scale-[1.03]"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            loading="eager"
+          />
+        </div>
+      )}
+
       {/* Gradient Overlays */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#081711]/95 via-[#081711]/50 to-black/30 group-hover:via-[#081711]/40 transition-colors" />
+      <div
+        className={`absolute inset-0 bg-gradient-to-t transition-all duration-300 z-10 pointer-events-none ${
+          isPlaying
+            ? "from-[#081711]/90 via-transparent to-black/40"
+            : "from-[#081711]/95 via-[#081711]/50 to-black/30 group-hover:via-[#081711]/40"
+        }`}
+      />
 
-      {/* Top Bar with Badge and YouTube external link */}
-      <div className="relative z-10 p-3 sm:p-4 flex items-center justify-between w-full">
-        <span
-          className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-mono font-bold uppercase tracking-wider ${
-            isShort
-              ? "bg-[#d98d12] text-[#0e261f]"
-              : "bg-[#1b4335] text-[#9aedd0]"
-          }`}
-        >
-          <Play className="w-2.5 h-2.5 fill-current" />
-          {isShort ? "Shorts · 9:16" : "Long-Form · 16:9"}
-        </span>
+      {/* Top Bar with Badge, Audio Mute Toggle, Fullscreen Expand & YouTube link */}
+      <div className="relative z-20 p-3 sm:p-4 flex items-center justify-between w-full">
+        {isPlaying ? (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-mono font-bold uppercase tracking-wider bg-emerald-500 text-white shadow-md animate-pulse">
+            <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
+            Playing
+          </span>
+        ) : (
+          <span
+            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-mono font-bold uppercase tracking-wider ${
+              isShort
+                ? "bg-[#d98d12] text-[#0e261f]"
+                : "bg-[#1b4335] text-[#9aedd0]"
+            }`}
+          >
+            <Play className="w-2.5 h-2.5 fill-current" />
+            {isShort ? "Shorts · 9:16" : "Long-Form · 16:9"}
+          </span>
+        )}
 
-        <a
-          href={video.youtubeUrl}
-          target="_blank"
-          rel="noreferrer"
-          onClick={(e) => e.stopPropagation()}
-          className="w-7 h-7 rounded-full bg-black/50 hover:bg-[#d98d12] text-white hover:text-[#0e261f] flex items-center justify-center transition-colors shadow-sm"
-          title="Open in YouTube"
-        >
-          <ExternalLink className="w-3.5 h-3.5" />
-        </a>
-      </div>
+        {/* Action Controls */}
+        <div className="flex items-center gap-1.5">
+          {/* Audio Mute/Unmute Toggle (visible when playing) */}
+          {isPlaying && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsMuted(!isMuted);
+              }}
+              className="w-7 h-7 rounded-full bg-black/60 hover:bg-[#d98d12] text-white hover:text-[#0e261f] flex items-center justify-center transition-colors shadow-md backdrop-blur-sm"
+              title={isMuted ? "Sound is off (Click to unmute)" : "Sound is on (Click to mute)"}
+              aria-label={isMuted ? "Unmute audio" : "Mute audio"}
+            >
+              {isMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5 text-[#d98d12]" />}
+            </button>
+          )}
 
-      {/* Centered Golden Play Button */}
-      <div className="relative z-10 my-auto flex items-center justify-center">
-        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#d98d12] text-[#0e261f] flex items-center justify-center shadow-lg group-hover:scale-115 group-hover:bg-[#f0a62d] transition-all duration-300">
-          <Play className="w-5 h-5 sm:w-6 sm:h-6 fill-current ml-0.5" />
+          {/* Fullscreen Modal Expand Button */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onPlay();
+            }}
+            className="w-7 h-7 rounded-full bg-black/60 hover:bg-[#d98d12] text-white hover:text-[#0e261f] flex items-center justify-center transition-colors shadow-md backdrop-blur-sm"
+            title="Expand video modal"
+            aria-label="Expand video"
+          >
+            <Maximize2 className="w-3.5 h-3.5" />
+          </button>
+
+          {/* YouTube Link */}
+          <a
+            href={video.youtubeUrl}
+            target="_blank"
+            rel="noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="w-7 h-7 rounded-full bg-black/60 hover:bg-[#d98d12] text-white hover:text-[#0e261f] flex items-center justify-center transition-colors shadow-md backdrop-blur-sm"
+            title="Open in YouTube"
+          >
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
         </div>
       </div>
 
+      {/* Centered Golden Play Button (visible when not playing) */}
+      {!isPlaying && (
+        <div className="relative z-10 my-auto flex items-center justify-center pointer-events-none">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#d98d12] text-[#0e261f] flex items-center justify-center shadow-lg group-hover:scale-115 group-hover:bg-[#f0a62d] transition-all duration-300">
+            <Play className="w-5 h-5 sm:w-6 sm:h-6 fill-current ml-0.5" />
+          </div>
+        </div>
+      )}
+
+      {/* Spacer when playing */}
+      {isPlaying && <div className="my-auto" />}
+
       {/* Bottom Info */}
-      <div className="relative z-10 p-3 sm:p-4 text-left space-y-1 bg-gradient-to-t from-black/80 to-transparent">
+      <div className="relative z-20 p-3 sm:p-4 text-left space-y-1 bg-gradient-to-t from-black/90 via-black/50 to-transparent">
         <h4 className="font-display font-bold text-xs sm:text-sm text-[#f7f4ec] group-hover:text-[#f8edd6] transition-colors line-clamp-2 leading-snug">
           {video.title}
         </h4>

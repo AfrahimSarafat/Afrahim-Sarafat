@@ -10,6 +10,7 @@ import { Footer } from "./components/Footer";
 import { CaseStudyModal } from "./components/CaseStudyModal";
 import { EditProfileModal } from "./components/EditProfileModal";
 import { ProfileData, INITIAL_PROFILE, ProjectItem } from "./portfolioData";
+import { ThemeProvider } from "./context/ThemeContext";
 
 export default function App() {
   const [profile, setProfile] = useState<ProfileData>(() => {
@@ -76,57 +77,59 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f7f4ec] text-[#17211d] flex flex-col font-sans selection:bg-[#e49c25] selection:text-[#0e261f]">
-      {/* Top Anchor for smooth scroll */}
-      <span id="top" className="block -mt-20 pt-20" aria-hidden="true" />
+    <ThemeProvider>
+      <div className="min-h-screen bg-[#f7f4ec] text-[#17211d] flex flex-col font-sans selection:bg-[#e49c25] selection:text-[#0e261f] transition-colors duration-300">
+        {/* Top Anchor for smooth scroll */}
+        <span id="top" className="block -mt-20 pt-20" aria-hidden="true" />
 
-      {/* Navigation Header */}
-      <Header
-        profile={profile}
-        onOpenEditModal={() => setEditModalOpen(true)}
-      />
+        {/* Navigation Header */}
+        <Header
+          profile={profile}
+          onOpenEditModal={() => setEditModalOpen(true)}
+        />
 
-      {/* Main Page Sections */}
-      <main id="main" className="flex-1">
-        {/* 1. Home Section (Hero & Tools Marquee) */}
-        <Hero profile={profile} />
-        <ToolsMarquee />
+        {/* Main Page Sections */}
+        <main id="main" className="flex-1">
+          {/* 1. Home Section (Hero & Tools Marquee) */}
+          <Hero profile={profile} />
+          <ToolsMarquee />
 
-        {/* 2. Work Section */}
-        <WorkSection onSelectProject={setSelectedProject} />
+          {/* 2. Work Section */}
+          <WorkSection onSelectProject={setSelectedProject} />
 
-        {/* 3. Services Section */}
-        <ServicesSection />
+          {/* 3. Services Section */}
+          <ServicesSection />
 
-        {/* 4. About Section */}
-        <AboutSection profile={profile} />
+          {/* 4. About Section */}
+          <AboutSection profile={profile} />
 
-        {/* Thin divider border matching the color of the section above About (Services #0e261f) */}
-        <div className="w-full bg-[#f7f4ec] px-4 sm:px-6 lg:px-8" aria-hidden="true">
-          <div className="max-w-6xl mx-auto border-t border-[#0e261f]/25" />
-        </div>
+          {/* Thin divider border matching the color of the section above About (Services #0e261f) */}
+          <div className="w-full bg-[#f7f4ec] px-4 sm:px-6 lg:px-8" aria-hidden="true">
+            <div className="max-w-6xl mx-auto border-t border-[#0e261f]/25" />
+          </div>
 
-        {/* 5. Contact Section */}
-        <ContactSection profile={profile} />
-      </main>
+          {/* 5. Contact Section */}
+          <ContactSection profile={profile} />
+        </main>
 
-      {/* Site Footer */}
-      <Footer profile={profile} />
+        {/* Site Footer */}
+        <Footer profile={profile} />
 
-      {/* Case Study Modal */}
-      <CaseStudyModal
-        project={selectedProject}
-        onClose={() => setSelectedProject(null)}
-      />
+        {/* Case Study Modal */}
+        <CaseStudyModal
+          project={selectedProject}
+          onClose={() => setSelectedProject(null)}
+        />
 
-      {/* Edit Profile Info Modal */}
-      <EditProfileModal
-        isOpen={editModalOpen}
-        onClose={() => setEditModalOpen(false)}
-        profile={profile}
-        onSave={handleSaveProfile}
-        onReset={handleResetProfile}
-      />
-    </div>
+        {/* Edit Profile Info Modal */}
+        <EditProfileModal
+          isOpen={editModalOpen}
+          onClose={() => setEditModalOpen(false)}
+          profile={profile}
+          onSave={handleSaveProfile}
+          onReset={handleResetProfile}
+        />
+      </div>
+    </ThemeProvider>
   );
 }

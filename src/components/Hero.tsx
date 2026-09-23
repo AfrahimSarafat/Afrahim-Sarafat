@@ -160,49 +160,6 @@ export const Hero: React.FC<HeroProps> = ({ profile }) => {
                   loading="eager"
                   referrerPolicy="no-referrer"
                 />
-
-                {/* CC Light Sweep Effect: Specular light beam sweeping from top-left to bottom-right */}
-                <div
-                  className="absolute inset-0 pointer-events-none overflow-hidden z-20"
-                  aria-hidden="true"
-                >
-                  <motion.div
-                    className="absolute -top-[120%] -left-[120%] w-[340%] h-[340%]"
-                    style={{
-                      background:
-                        "linear-gradient(135deg, rgba(255,255,255,0) 38%, rgba(255,255,255,0.06) 43%, rgba(255,255,255,0.65) 50%, rgba(255,255,255,0.08) 57%, rgba(255,255,255,0) 62%)",
-                      mixBlendMode: "overlay",
-                    }}
-                    animate={{
-                      x: ["-38%", "38%"],
-                      y: ["-38%", "38%"],
-                    }}
-                    transition={{
-                      duration: 3.2,
-                      repeat: Infinity,
-                      repeatDelay: 1.8,
-                      ease: [0.4, 0, 0.2, 1],
-                    }}
-                  />
-                  <motion.div
-                    className="absolute -top-[120%] -left-[120%] w-[340%] h-[340%]"
-                    style={{
-                      background:
-                        "linear-gradient(135deg, rgba(255,255,255,0) 47%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 53%)",
-                      mixBlendMode: "screen",
-                    }}
-                    animate={{
-                      x: ["-38%", "38%"],
-                      y: ["-38%", "38%"],
-                    }}
-                    transition={{
-                      duration: 3.2,
-                      repeat: Infinity,
-                      repeatDelay: 1.8,
-                      ease: [0.4, 0, 0.2, 1],
-                    }}
-                  />
-                </div>
               </div>
             </div>
           </div>
