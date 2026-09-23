@@ -29,7 +29,7 @@ export const ToolsMarquee: React.FC = () => {
   const duplicatedTools = [...singleSet, ...singleSet];
 
   return (
-    <section className="py-10 border-y border-[#e5dfcf] bg-[#f2ede0] overflow-hidden" aria-label="Tools I work with">
+    <section id="tools" className="py-10 border-y border-[#e5dfcf] bg-[#f2ede0] overflow-hidden" aria-label="Tools I work with">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 mb-4 text-center">
         <p className="text-xs font-semibold uppercase tracking-wider text-[#6b7b73]">
           The kit I reach for every day

@@ -37,64 +37,40 @@
 }
 
 /* ==========================================================================
-   Three Theme Modes System: Light Mode, Night Mode, Dark Mode
+   THREE THEME MODES: LIGHT, NIGHT, AND DARK
    ========================================================================== */
 
-/* 1. Light Mode (Default signature cream & forest aesthetic) */
+/* --------------------------------------------------------------------------
+   1. LIGHT MODE (Default Authentic Warm Cream & Deep Forest Aesthetic)
+   -------------------------------------------------------------------------- */
 html[data-theme="light"] {
   color-scheme: light;
 }
 
-/* 2. Night Mode (Deep Midnight Navy / Slate Atmospheric) */
+/* --------------------------------------------------------------------------
+   2. NIGHT MODE (Deep Atmospheric Midnight Navy Slate & Luminous White Headings)
+   -------------------------------------------------------------------------- */
 html[data-theme="night"],
+html.night,
 body.night {
   color-scheme: dark;
-  background-color: #0b121e;
-  color: #f0f4f9;
+  background-color: #0b1320 !important;
+  color: #f1f5f9 !important;
 }
 
 html[data-theme="night"] body {
-  background-color: #0b121e !important;
-  color: #f0f4f9 !important;
+  background-color: #0b1320 !important;
+  color: #f1f5f9 !important;
 }
 
+/* Night: Header */
 html[data-theme="night"] #siteHeader {
-  background-color: rgba(11, 18, 30, 0.96) !important;
-  border-color: #1f304c !important;
-}
-
-html[data-theme="night"] .mobile-drawer-container {
-  background-color: #0b121e !important;
-  border-color: #1f304c !important;
-}
-
-html[data-theme="night"] .theme-switcher-bg {
-  background-color: #131f33 !important;
-  border-color: #243756 !important;
-}
-
-html[data-theme="night"] .theme-switcher-bg button {
-  color: #94a5bd;
-}
-
-html[data-theme="night"] .theme-switcher-bg button:hover {
-  color: #f0f4f9;
-  background-color: rgba(255, 255, 255, 0.08);
-}
-
-html[data-theme="night"] .theme-switcher-bg button.active-theme-btn {
-  background-color: #d98d12 !important;
-  color: #0b121e !important;
-  box-shadow: 0 1px 4px rgba(217, 141, 18, 0.35);
-}
-
-html[data-theme="night"] .header-brand-icon {
-  background-color: #d98d12 !important;
-  color: #0b121e !important;
+  background-color: rgba(11, 19, 32, 0.96) !important;
+  border-color: #1e3250 !important;
 }
 
 html[data-theme="night"] .header-brand-name {
-  color: #f0f4f9 !important;
+  color: #ffffff !important;
 }
 
 html[data-theme="night"] .header-brand-sub {
@@ -112,109 +88,482 @@ html[data-theme="night"] .mobile-nav-links a:hover {
 }
 
 html[data-theme="night"] .mobile-menu-btn {
-  border-color: #243756 !important;
-  color: #f0f4f9 !important;
-  background-color: #131f33 !important;
+  background-color: #132035 !important;
+  border-color: #1e3250 !important;
+  color: #ffffff !important;
 }
 
-/* Background overrides for Night Mode */
-html[data-theme="night"] .bg-\[\#f7f4ec\],
-html[data-theme="night"] [class*="bg-[#f7f4ec]"] {
-  background-color: #0b121e !important;
+html[data-theme="night"] .mobile-drawer-container {
+  background-color: #0b1320 !important;
+  border-color: #1e3250 !important;
 }
 
-html[data-theme="night"] .bg-\[\#ede8dc\],
-html[data-theme="night"] [class*="bg-[#ede8dc]"] {
-  background-color: #121c2e !important;
+/* Night: Theme Switcher */
+html[data-theme="night"] .theme-switcher-bg {
+  background-color: #132035 !important;
+  border-color: #1e3250 !important;
 }
 
-html[data-theme="night"] .bg-\[\#fcfaf6\],
-html[data-theme="night"] [class*="bg-[#fcfaf6]"] {
-  background-color: #152238 !important;
-}
-
-html[data-theme="night"] .bg-white {
-  background-color: #131f33 !important;
-}
-
-/* Text overrides for Night Mode */
-html[data-theme="night"] .text-\[\#17211d\],
-html[data-theme="night"] .text-\[\#11241d\],
-html[data-theme="night"] .text-\[\#2f3d36\],
-html[data-theme="night"] .text-\[\#203128\],
-html[data-theme="night"] .text-\[\#1a2b23\] {
-  color: #f0f4f9 !important;
-}
-
-html[data-theme="night"] .text-\[\#63726a\],
-html[data-theme="night"] .text-\[\#4a5a51\],
-html[data-theme="night"] .text-\[\#52665a\],
-html[data-theme="night"] .text-\[\#708277\] {
+html[data-theme="night"] .theme-switcher-bg button {
   color: #94a5bd !important;
 }
 
-/* Border overrides for Night Mode */
-html[data-theme="night"] .border-\[\#e5dfcf\],
-html[data-theme="night"] .border-\[\#d6cfbe\],
-html[data-theme="night"] .border-\[\#ded7c6\],
-html[data-theme="night"] .border-\[\#0e261f\]\/25 {
-  border-color: #1f304c !important;
+html[data-theme="night"] .theme-switcher-bg button:hover {
+  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.08) !important;
 }
 
-/* 3. Dark Mode (True Deep Charcoal / Pure Minimalist Black) */
+html[data-theme="night"] .theme-switcher-bg button.active-theme-btn {
+  background-color: #d98d12 !important;
+  color: #09101a !important;
+  box-shadow: 0 1px 4px rgba(217, 141, 18, 0.35) !important;
+}
+
+/* Night: Hero Section */
+html[data-theme="night"] #hero {
+  background-color: #0b1320 !important;
+}
+
+html[data-theme="night"] #hero h1,
+html[data-theme="night"] #hero-name {
+  color: #ffffff !important;
+}
+
+html[data-theme="night"] #hero-name span:first-child {
+  color: #cbd5e1 !important;
+}
+
+html[data-theme="night"] #hero p {
+  color: #94a5bd !important;
+}
+
+html[data-theme="night"] #hero #hero-lets-talk-btn {
+  border-color: #2a4268 !important;
+  color: #ffffff !important;
+  background-color: transparent !important;
+}
+
+html[data-theme="night"] #hero #hero-lets-talk-btn:hover {
+  background-color: #16263f !important;
+  border-color: #3b5a8c !important;
+}
+
+html[data-theme="night"] #hero a[id^="hero-social-"] {
+  background-color: #132035 !important;
+  border-color: #1e3250 !important;
+  color: #cbd5e1 !important;
+}
+
+html[data-theme="night"] #hero a[id^="hero-social-"]:hover {
+  border-color: #d98d12 !important;
+  color: #d98d12 !important;
+}
+
+/* Night: Tools Marquee */
+html[data-theme="night"] #tools {
+  background-color: #0e1828 !important;
+  border-color: #1e3250 !important;
+}
+
+html[data-theme="night"] #tools p {
+  color: #38bdf8 !important;
+}
+
+html[data-theme="night"] #tools .animate-marquee > div {
+  background-color: #132035 !important;
+  border-color: #1e3250 !important;
+  color: #e2e8f0 !important;
+}
+
+html[data-theme="night"] #tools .from-\[\#f2ede0\] {
+  --tw-gradient-from: #0e1828 var(--tw-gradient-from-position) !important;
+  --tw-gradient-to: rgba(14, 24, 40, 0) var(--tw-gradient-to-position) !important;
+}
+
+/* Night: Work Section (FULL DARK MIDNIGHT CANVAS - NO CREAM BACKGROUND) */
+html[data-theme="night"] #work {
+  background-color: #0e1828 !important;
+  border-color: #1e3250 !important;
+}
+
+/* Work Main Title: Bold, crisp, luminous pure white */
+html[data-theme="night"] #work h2,
+html[data-theme="night"] #work-h {
+  color: #ffffff !important;
+}
+
+/* Work Eyebrow */
+html[data-theme="night"] #work .uppercase.tracking-wider {
+  color: #38bdf8 !important;
+}
+
+/* Work Subtitle / Description */
+html[data-theme="night"] #work > div > div:first-child p,
+html[data-theme="night"] #work .space-y-3\.5 p {
+  color: #94a5bd !important;
+}
+
+/* Work Filter Tab Bar */
+html[data-theme="night"] #work .bg-\[\#dfd8c5\],
+html[data-theme="night"] #work [class*="bg-[#dfd8c5]"] {
+  background-color: #132035 !important;
+  border-color: #1e3250 !important;
+}
+
+html[data-theme="night"] #work button[role="tab"] {
+  color: #94a5bd !important;
+}
+
+html[data-theme="night"] #work button[role="tab"]:hover {
+  color: #ffffff !important;
+  background-color: #1a2c46 !important;
+}
+
+html[data-theme="night"] #work button[role="tab"][aria-selected="true"],
+html[data-theme="night"] #work button[role="tab"].bg-\[\#0e261f\] {
+  background-color: #d98d12 !important;
+  color: #09101a !important;
+  font-weight: 700 !important;
+}
+
+/* Video Sub-Filter Buttons */
+html[data-theme="night"] #work .bg-\[\#ece6d5\] {
+  background-color: #16253c !important;
+  color: #94a5bd !important;
+}
+
+html[data-theme="night"] #work .bg-\[\#ece6d5\]:hover {
+  background-color: #1e3352 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="night"] #work .bg-\[\#d98d12\] {
+  background-color: #d98d12 !important;
+  color: #09101a !important;
+}
+
+/* Section Sub-Headings in Work: Crystal Clear Pure White */
+html[data-theme="night"] #work h3,
+html[data-theme="night"] #work .font-display.font-bold.text-xl,
+html[data-theme="night"] #work .font-display.font-bold.sm\:text-2xl {
+  color: #ffffff !important;
+}
+
+/* Row dividers in Work */
+html[data-theme="night"] #work .border-\[\#d8d0bd\],
+html[data-theme="night"] #work [class*="border-[#d8d0bd]"],
+html[data-theme="night"] #work .border-b {
+  border-color: #1e3250 !important;
+}
+
+/* Counter badges in Work */
+html[data-theme="night"] #work .bg-\[\#ded6c2\],
+html[data-theme="night"] #work [class*="bg-[#ded6c2]"] {
+  background-color: #1e3250 !important;
+  color: #93c5fd !important;
+}
+
+/* Arrow scroll navigation buttons in Work */
+html[data-theme="night"] #work .rounded-full.bg-\[\#dfd8c5\],
+html[data-theme="night"] #work button[aria-label*="Scroll"] {
+  background-color: #16253c !important;
+  border-color: #233a5c !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="night"] #work button[aria-label*="Scroll"]:hover {
+  background-color: #d98d12 !important;
+  color: #09101a !important;
+  border-color: #d98d12 !important;
+}
+
+/* Video Cards & Graphic Design Cards in Work */
+html[data-theme="night"] #work article,
+html[data-theme="night"] #work [role="article"],
+html[data-theme="night"] #work .bg-\[\#f2ede0\] {
+  background-color: #132035 !important;
+  border-color: #1e3250 !important;
+}
+
+html[data-theme="night"] #work article h4,
+html[data-theme="night"] #work article h3,
+html[data-theme="night"] #work [role="article"] h4,
+html[data-theme="night"] #work [role="article"] h3 {
+  color: #ffffff !important;
+}
+
+html[data-theme="night"] #work article p,
+html[data-theme="night"] #work [role="article"] p {
+  color: #94a5bd !important;
+}
+
+html[data-theme="night"] #work .bg-\[\#ded7c5\],
+html[data-theme="night"] #work [class*="bg-[#ded7c5]"] {
+  background-color: #1a2c46 !important;
+  color: #cbd5e1 !important;
+  border-color: #233a5c !important;
+}
+
+/* Night: Services Section */
+html[data-theme="night"] #services {
+  background-color: #0b1320 !important;
+}
+
+html[data-theme="night"] #services h2,
+html[data-theme="night"] #services-h,
+html[data-theme="night"] #services h3 {
+  color: #ffffff !important;
+}
+
+html[data-theme="night"] #services p {
+  color: #94a5bd !important;
+}
+
+html[data-theme="night"] #services article {
+  background-color: #132035 !important;
+  border-color: #1e3250 !important;
+}
+
+html[data-theme="night"] #services article h4 {
+  color: #ffffff !important;
+}
+
+/* Night: About Section */
+html[data-theme="night"] #about {
+  background-color: #0b1320 !important;
+}
+
+html[data-theme="night"] #about h2,
+html[data-theme="night"] #about-h {
+  color: #ffffff !important;
+}
+
+html[data-theme="night"] #about .uppercase.tracking-wider {
+  color: #38bdf8 !important;
+}
+
+html[data-theme="night"] #about p {
+  color: #94a5bd !important;
+}
+
+html[data-theme="night"] #about .aspect-\[4\/5\] {
+  background-color: #132035 !important;
+  border-color: #1e3250 !important;
+}
+
+/* Night: Testimonials Section */
+html[data-theme="night"] #voices {
+  background-color: #0b1320 !important;
+}
+
+html[data-theme="night"] #voices h2,
+html[data-theme="night"] #voices-h {
+  color: #ffffff !important;
+}
+
+html[data-theme="night"] #voices .bg-\[\#14342b\]\/95 {
+  background-color: #132035 !important;
+  border-color: #1e3250 !important;
+}
+
+html[data-theme="night"] #voices blockquote {
+  color: #ffffff !important;
+}
+
+/* Night: Contact Section (FULL DARK MIDNIGHT CANVAS - NO CREAM BACKGROUND) */
+html[data-theme="night"] #contact {
+  background-color: #0e1828 !important;
+  border-color: #1e3250 !important;
+}
+
+/* Contact Main Title: Bold, crisp, glowing pure white */
+html[data-theme="night"] #contact h2,
+html[data-theme="night"] #contact-h {
+  color: #ffffff !important;
+}
+
+/* Contact Eyebrow */
+html[data-theme="night"] #contact .uppercase.tracking-wider {
+  color: #38bdf8 !important;
+}
+
+/* Contact Intro description */
+html[data-theme="night"] #contact .space-y-4 p {
+  color: #94a5bd !important;
+}
+
+/* Contact Direct Channels */
+html[data-theme="night"] #contact .w-10.h-10 {
+  background-color: #16253c !important;
+  border-color: #233a5c !important;
+  color: #d98d12 !important;
+}
+
+html[data-theme="night"] #contact a[href^="mailto:"],
+html[data-theme="night"] #contact a[href^="tel:"],
+html[data-theme="night"] #contact li span.font-medium {
+  color: #ffffff !important;
+}
+
+html[data-theme="night"] #contact a[href^="mailto:"]:hover,
+html[data-theme="night"] #contact a[href^="tel:"]:hover {
+  color: #d98d12 !important;
+}
+
+/* Contact Social Channel Buttons */
+html[data-theme="night"] #contact a.w-11.h-11 {
+  background-color: #16253c !important;
+  border-color: #233a5c !important;
+  color: #cbd5e1 !important;
+}
+
+html[data-theme="night"] #contact a.w-11.h-11:hover {
+  background-color: #d98d12 !important;
+  color: #09101a !important;
+  border-color: #d98d12 !important;
+}
+
+/* Contact Form Box Container */
+html[data-theme="night"] #contact .bg-\[\#ede8dc\],
+html[data-theme="night"] #contact [class*="bg-[#ede8dc]"],
+html[data-theme="night"] #contact .rounded-3xl.shadow-xl,
+html[data-theme="night"] #contact form {
+  background-color: #132035 !important;
+  border-color: #1e3250 !important;
+}
+
+html[data-theme="night"] #contact form h3,
+html[data-theme="night"] #contact .font-display.font-bold {
+  color: #ffffff !important;
+}
+
+html[data-theme="night"] #contact form p {
+  color: #94a5bd !important;
+}
+
+html[data-theme="night"] #contact form label {
+  color: #cbd5e1 !important;
+}
+
+/* Contact Form Input Fields & Selects */
+html[data-theme="night"] #contact input,
+html[data-theme="night"] #contact textarea,
+html[data-theme="night"] #contact select {
+  background-color: #0b1320 !important;
+  border-color: #1e3250 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="night"] #contact option {
+  background-color: #0b1320 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="night"] #contact input::placeholder,
+html[data-theme="night"] #contact textarea::placeholder {
+  color: #64748b !important;
+}
+
+html[data-theme="night"] #contact input:focus,
+html[data-theme="night"] #contact textarea:focus,
+html[data-theme="night"] #contact select:focus {
+  border-color: #d98d12 !important;
+  outline: none;
+}
+
+/* Night: Footer */
+html[data-theme="night"] footer {
+  background-color: #070c14 !important;
+  border-color: #132035 !important;
+}
+
+html[data-theme="night"] footer .font-display.font-bold {
+  color: #ffffff !important;
+}
+
+html[data-theme="night"] footer p {
+  color: #94a5bd !important;
+}
+
+html[data-theme="night"] footer a:hover {
+  color: #e49c25 !important;
+}
+
+/* Night: Modals */
+html[data-theme="night"] #case-study-backdrop > div,
+html[data-theme="night"] #edit-profile-backdrop > div {
+  background-color: #0e1828 !important;
+  border-color: #1e3250 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="night"] #case-study-backdrop h2,
+html[data-theme="night"] #case-study-backdrop h3,
+html[data-theme="night"] #edit-profile-backdrop h2,
+html[data-theme="night"] #edit-profile-backdrop h3 {
+  color: #ffffff !important;
+}
+
+html[data-theme="night"] #case-study-backdrop p,
+html[data-theme="night"] #edit-profile-backdrop p {
+  color: #94a5bd !important;
+}
+
+/* Night: Global Text Color Fallbacks */
+html[data-theme="night"] .text-\[\#11241d\],
+html[data-theme="night"] .text-\[\#17211d\],
+html[data-theme="night"] .text-\[\#182a22\],
+html[data-theme="night"] .text-\[\#273a31\],
+html[data-theme="night"] .text-\[\#2b3e34\],
+html[data-theme="night"] .text-\[\#1c3027\],
+html[data-theme="night"] .text-\[\#203128\],
+html[data-theme="night"] .text-\[\#23382f\],
+html[data-theme="night"] .text-\[\#34483e\] {
+  color: #ffffff !important;
+}
+
+html[data-theme="night"] .text-\[\#4f6158\],
+html[data-theme="night"] .text-\[\#475950\],
+html[data-theme="night"] .text-\[\#4e5f56\],
+html[data-theme="night"] .text-\[\#4d5e56\],
+html[data-theme="night"] .text-\[\#687971\],
+html[data-theme="night"] .text-\[\#63756d\],
+html[data-theme="night"] .text-\[\#71827a\],
+html[data-theme="night"] .text-\[\#6c8075\],
+html[data-theme="night"] .text-\[\#43554d\],
+html[data-theme="night"] .text-\[\#3f5147\] {
+  color: #94a5bd !important;
+}
+
+
+/* --------------------------------------------------------------------------
+   3. DARK MODE (True Obsidian Black, Ultra-High Contrast, Warm Gold Accents)
+   -------------------------------------------------------------------------- */
 html[data-theme="dark"],
+html.dark,
 body.dark {
   color-scheme: dark;
-  background-color: #090a09;
-  color: #f2f5f3;
+  background-color: #060708 !important;
+  color: #f8fafc !important;
 }
 
 html[data-theme="dark"] body {
-  background-color: #090a09 !important;
-  color: #f2f5f3 !important;
+  background-color: #060708 !important;
+  color: #f8fafc !important;
 }
 
+/* Dark: Header */
 html[data-theme="dark"] #siteHeader {
-  background-color: rgba(9, 10, 9, 0.96) !important;
-  border-color: #1f2621 !important;
-}
-
-html[data-theme="dark"] .mobile-drawer-container {
-  background-color: #090a09 !important;
-  border-color: #1f2621 !important;
-}
-
-html[data-theme="dark"] .theme-switcher-bg {
-  background-color: #131715 !important;
-  border-color: #242c26 !important;
-}
-
-html[data-theme="dark"] .theme-switcher-bg button {
-  color: #829489;
-}
-
-html[data-theme="dark"] .theme-switcher-bg button:hover {
-  color: #f2f5f3;
-  background-color: rgba(255, 255, 255, 0.08);
-}
-
-html[data-theme="dark"] .theme-switcher-bg button.active-theme-btn {
-  background-color: #e49c25 !important;
-  color: #090a09 !important;
-  box-shadow: 0 1px 4px rgba(228, 156, 37, 0.35);
-}
-
-html[data-theme="dark"] .header-brand-icon {
-  background-color: #e49c25 !important;
-  color: #090a09 !important;
+  background-color: rgba(6, 7, 8, 0.96) !important;
+  border-color: #181b1e !important;
 }
 
 html[data-theme="dark"] .header-brand-name {
-  color: #f2f5f3 !important;
+  color: #ffffff !important;
 }
 
 html[data-theme="dark"] .header-brand-sub {
-  color: #829489 !important;
+  color: #8c96a0 !important;
 }
 
 html[data-theme="dark"] .header-nav-list,
@@ -228,51 +577,449 @@ html[data-theme="dark"] .mobile-nav-links a:hover {
 }
 
 html[data-theme="dark"] .mobile-menu-btn {
-  border-color: #242c26 !important;
-  color: #f2f5f3 !important;
-  background-color: #131715 !important;
+  background-color: #101215 !important;
+  border-color: #181b1e !important;
+  color: #ffffff !important;
 }
 
-/* Background overrides for Dark Mode */
-html[data-theme="dark"] .bg-\[\#f7f4ec\],
-html[data-theme="dark"] [class*="bg-[#f7f4ec]"] {
-  background-color: #090a09 !important;
+html[data-theme="dark"] .mobile-drawer-container {
+  background-color: #060708 !important;
+  border-color: #181b1e !important;
 }
 
-html[data-theme="dark"] .bg-\[\#ede8dc\],
-html[data-theme="dark"] [class*="bg-[#ede8dc]"] {
-  background-color: #121614 !important;
+/* Dark: Theme Switcher */
+html[data-theme="dark"] .theme-switcher-bg {
+  background-color: #101215 !important;
+  border-color: #181b1e !important;
 }
 
-html[data-theme="dark"] .bg-\[\#fcfaf6\],
-html[data-theme="dark"] [class*="bg-[#fcfaf6]"] {
-  background-color: #151a17 !important;
+html[data-theme="dark"] .theme-switcher-bg button {
+  color: #8c96a0 !important;
 }
 
-html[data-theme="dark"] .bg-white {
-  background-color: #121513 !important;
+html[data-theme="dark"] .theme-switcher-bg button:hover {
+  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.08) !important;
 }
 
-/* Text overrides for Dark Mode */
-html[data-theme="dark"] .text-\[\#17211d\],
+html[data-theme="dark"] .theme-switcher-bg button.active-theme-btn {
+  background-color: #e49c25 !important;
+  color: #060708 !important;
+  box-shadow: 0 1px 4px rgba(228, 156, 37, 0.35) !important;
+}
+
+/* Dark: Hero Section */
+html[data-theme="dark"] #hero {
+  background-color: #060708 !important;
+}
+
+html[data-theme="dark"] #hero h1,
+html[data-theme="dark"] #hero-name {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] #hero-name span:first-child {
+  color: #8c96a0 !important;
+}
+
+html[data-theme="dark"] #hero p {
+  color: #8c96a0 !important;
+}
+
+html[data-theme="dark"] #hero #hero-lets-talk-btn {
+  border-color: #22262a !important;
+  color: #ffffff !important;
+  background-color: transparent !important;
+}
+
+html[data-theme="dark"] #hero #hero-lets-talk-btn:hover {
+  background-color: #14171a !important;
+  border-color: #2c3238 !important;
+}
+
+html[data-theme="dark"] #hero a[id^="hero-social-"] {
+  background-color: #101215 !important;
+  border-color: #181b1e !important;
+  color: #d0d7de !important;
+}
+
+html[data-theme="dark"] #hero a[id^="hero-social-"]:hover {
+  border-color: #e49c25 !important;
+  color: #e49c25 !important;
+}
+
+/* Dark: Tools Marquee */
+html[data-theme="dark"] #tools {
+  background-color: #090a0c !important;
+  border-color: #181b1e !important;
+}
+
+html[data-theme="dark"] #tools p {
+  color: #e49c25 !important;
+}
+
+html[data-theme="dark"] #tools .animate-marquee > div {
+  background-color: #101215 !important;
+  border-color: #181b1e !important;
+  color: #e1e7ec !important;
+}
+
+html[data-theme="dark"] #tools .from-\[\#f2ede0\] {
+  --tw-gradient-from: #090a0c var(--tw-gradient-from-position) !important;
+  --tw-gradient-to: rgba(9, 10, 12, 0) var(--tw-gradient-to-position) !important;
+}
+
+/* Dark: Work Section (DEEP OBSIDIAN DARK CANVAS - NO CREAM BACKGROUND) */
+html[data-theme="dark"] #work {
+  background-color: #090a0c !important;
+  border-color: #181b1e !important;
+}
+
+/* Work Main Title: Pure brilliant crisp white */
+html[data-theme="dark"] #work h2,
+html[data-theme="dark"] #work-h {
+  color: #ffffff !important;
+}
+
+/* Work Eyebrow */
+html[data-theme="dark"] #work .uppercase.tracking-wider {
+  color: #e49c25 !important;
+}
+
+/* Work Subtitle / Description */
+html[data-theme="dark"] #work > div > div:first-child p,
+html[data-theme="dark"] #work .space-y-3\.5 p {
+  color: #8c96a0 !important;
+}
+
+/* Work Filter Tab Bar */
+html[data-theme="dark"] #work .bg-\[\#dfd8c5\],
+html[data-theme="dark"] #work [class*="bg-[#dfd8c5]"] {
+  background-color: #101215 !important;
+  border-color: #181b1e !important;
+}
+
+html[data-theme="dark"] #work button[role="tab"] {
+  color: #8c96a0 !important;
+}
+
+html[data-theme="dark"] #work button[role="tab"]:hover {
+  color: #ffffff !important;
+  background-color: #16191c !important;
+}
+
+html[data-theme="dark"] #work button[role="tab"][aria-selected="true"],
+html[data-theme="dark"] #work button[role="tab"].bg-\[\#0e261f\] {
+  background-color: #e49c25 !important;
+  color: #060708 !important;
+  font-weight: 700 !important;
+}
+
+/* Video Sub-Filter Buttons */
+html[data-theme="dark"] #work .bg-\[\#ece6d5\] {
+  background-color: #121518 !important;
+  color: #8c96a0 !important;
+}
+
+html[data-theme="dark"] #work .bg-\[\#ece6d5\]:hover {
+  background-color: #181b1e !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] #work .bg-\[\#d98d12\] {
+  background-color: #e49c25 !important;
+  color: #060708 !important;
+}
+
+/* Section Sub-Headings in Work: Crystal Clear Pure White */
+html[data-theme="dark"] #work h3,
+html[data-theme="dark"] #work .font-display.font-bold.text-xl,
+html[data-theme="dark"] #work .font-display.font-bold.sm\:text-2xl {
+  color: #ffffff !important;
+}
+
+/* Row dividers in Work */
+html[data-theme="dark"] #work .border-\[\#d8d0bd\],
+html[data-theme="dark"] #work [class*="border-[#d8d0bd]"],
+html[data-theme="dark"] #work .border-b {
+  border-color: #181b1e !important;
+}
+
+/* Counter badges in Work */
+html[data-theme="dark"] #work .bg-\[\#ded6c2\],
+html[data-theme="dark"] #work [class*="bg-[#ded6c2]"] {
+  background-color: #181b1e !important;
+  color: #e49c25 !important;
+}
+
+/* Arrow scroll navigation buttons in Work */
+html[data-theme="dark"] #work .rounded-full.bg-\[\#dfd8c5\],
+html[data-theme="dark"] #work button[aria-label*="Scroll"] {
+  background-color: #121518 !important;
+  border-color: #1e2226 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] #work button[aria-label*="Scroll"]:hover {
+  background-color: #e49c25 !important;
+  color: #060708 !important;
+  border-color: #e49c25 !important;
+}
+
+/* Video Cards & Graphic Design Cards in Work */
+html[data-theme="dark"] #work article,
+html[data-theme="dark"] #work [role="article"],
+html[data-theme="dark"] #work .bg-\[\#f2ede0\] {
+  background-color: #101215 !important;
+  border-color: #181b1e !important;
+}
+
+html[data-theme="dark"] #work article h4,
+html[data-theme="dark"] #work article h3,
+html[data-theme="dark"] #work [role="article"] h4,
+html[data-theme="dark"] #work [role="article"] h3 {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] #work article p,
+html[data-theme="dark"] #work [role="article"] p {
+  color: #8c96a0 !important;
+}
+
+html[data-theme="dark"] #work .bg-\[\#ded7c5\],
+html[data-theme="dark"] #work [class*="bg-[#ded7c5]"] {
+  background-color: #14171a !important;
+  color: #d0d7de !important;
+  border-color: #1e2226 !important;
+}
+
+/* Dark: Services Section */
+html[data-theme="dark"] #services {
+  background-color: #060708 !important;
+}
+
+html[data-theme="dark"] #services h2,
+html[data-theme="dark"] #services-h,
+html[data-theme="dark"] #services h3 {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] #services p {
+  color: #8c96a0 !important;
+}
+
+html[data-theme="dark"] #services article {
+  background-color: #101215 !important;
+  border-color: #181b1e !important;
+}
+
+html[data-theme="dark"] #services article h4 {
+  color: #ffffff !important;
+}
+
+/* Dark: About Section */
+html[data-theme="dark"] #about {
+  background-color: #060708 !important;
+}
+
+html[data-theme="dark"] #about h2,
+html[data-theme="dark"] #about-h {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] #about .uppercase.tracking-wider {
+  color: #e49c25 !important;
+}
+
+html[data-theme="dark"] #about p {
+  color: #8c96a0 !important;
+}
+
+html[data-theme="dark"] #about .aspect-\[4\/5\] {
+  background-color: #101215 !important;
+  border-color: #181b1e !important;
+}
+
+/* Dark: Testimonials Section */
+html[data-theme="dark"] #voices {
+  background-color: #060708 !important;
+}
+
+html[data-theme="dark"] #voices h2,
+html[data-theme="dark"] #voices-h {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] #voices .bg-\[\#14342b\]\/95 {
+  background-color: #101215 !important;
+  border-color: #181b1e !important;
+}
+
+html[data-theme="dark"] #voices blockquote {
+  color: #ffffff !important;
+}
+
+/* Dark: Contact Section (DEEP OBSIDIAN DARK CANVAS - NO CREAM BACKGROUND) */
+html[data-theme="dark"] #contact {
+  background-color: #090a0c !important;
+  border-color: #181b1e !important;
+}
+
+/* Contact Main Title: Pure crisp white */
+html[data-theme="dark"] #contact h2,
+html[data-theme="dark"] #contact-h {
+  color: #ffffff !important;
+}
+
+/* Contact Eyebrow */
+html[data-theme="dark"] #contact .uppercase.tracking-wider {
+  color: #e49c25 !important;
+}
+
+/* Contact Intro description */
+html[data-theme="dark"] #contact .space-y-4 p {
+  color: #8c96a0 !important;
+}
+
+/* Contact Direct Channels */
+html[data-theme="dark"] #contact .w-10.h-10 {
+  background-color: #121518 !important;
+  border-color: #1e2226 !important;
+  color: #e49c25 !important;
+}
+
+html[data-theme="dark"] #contact a[href^="mailto:"],
+html[data-theme="dark"] #contact a[href^="tel:"],
+html[data-theme="dark"] #contact li span.font-medium {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] #contact a[href^="mailto:"]:hover,
+html[data-theme="dark"] #contact a[href^="tel:"]:hover {
+  color: #e49c25 !important;
+}
+
+/* Contact Social Channel Buttons */
+html[data-theme="dark"] #contact a.w-11.h-11 {
+  background-color: #121518 !important;
+  border-color: #1e2226 !important;
+  color: #d0d7de !important;
+}
+
+html[data-theme="dark"] #contact a.w-11.h-11:hover {
+  background-color: #e49c25 !important;
+  color: #060708 !important;
+  border-color: #e49c25 !important;
+}
+
+/* Contact Form Box Container */
+html[data-theme="dark"] #contact .bg-\[\#ede8dc\],
+html[data-theme="dark"] #contact [class*="bg-[#ede8dc]"],
+html[data-theme="dark"] #contact .rounded-3xl.shadow-xl,
+html[data-theme="dark"] #contact form {
+  background-color: #101215 !important;
+  border-color: #181b1e !important;
+}
+
+html[data-theme="dark"] #contact form h3,
+html[data-theme="dark"] #contact .font-display.font-bold {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] #contact form p {
+  color: #8c96a0 !important;
+}
+
+html[data-theme="dark"] #contact form label {
+  color: #cbd5e1 !important;
+}
+
+/* Contact Form Input Fields & Selects */
+html[data-theme="dark"] #contact input,
+html[data-theme="dark"] #contact textarea,
+html[data-theme="dark"] #contact select {
+  background-color: #060708 !important;
+  border-color: #181b1e !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] #contact option {
+  background-color: #060708 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] #contact input::placeholder,
+html[data-theme="dark"] #contact textarea::placeholder {
+  color: #606b76 !important;
+}
+
+html[data-theme="dark"] #contact input:focus,
+html[data-theme="dark"] #contact textarea:focus,
+html[data-theme="dark"] #contact select:focus {
+  border-color: #e49c25 !important;
+  outline: none;
+}
+
+/* Dark: Footer */
+html[data-theme="dark"] footer {
+  background-color: #040405 !important;
+  border-color: #121416 !important;
+}
+
+html[data-theme="dark"] footer .font-display.font-bold {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] footer p {
+  color: #8c96a0 !important;
+}
+
+html[data-theme="dark"] footer a:hover {
+  color: #e49c25 !important;
+}
+
+/* Dark: Modals */
+html[data-theme="dark"] #case-study-backdrop > div,
+html[data-theme="dark"] #edit-profile-backdrop > div {
+  background-color: #090a0c !important;
+  border-color: #181b1e !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] #case-study-backdrop h2,
+html[data-theme="dark"] #case-study-backdrop h3,
+html[data-theme="dark"] #edit-profile-backdrop h2,
+html[data-theme="dark"] #edit-profile-backdrop h3 {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] #case-study-backdrop p,
+html[data-theme="dark"] #edit-profile-backdrop p {
+  color: #8c96a0 !important;
+}
+
+/* Dark: Global Text Color Fallbacks */
 html[data-theme="dark"] .text-\[\#11241d\],
-html[data-theme="dark"] .text-\[\#2f3d36\],
+html[data-theme="dark"] .text-\[\#17211d\],
+html[data-theme="dark"] .text-\[\#182a22\],
+html[data-theme="dark"] .text-\[\#273a31\],
+html[data-theme="dark"] .text-\[\#2b3e34\],
+html[data-theme="dark"] .text-\[\#1c3027\],
 html[data-theme="dark"] .text-\[\#203128\],
-html[data-theme="dark"] .text-\[\#1a2b23\] {
-  color: #f2f5f3 !important;
+html[data-theme="dark"] .text-\[\#23382f\],
+html[data-theme="dark"] .text-\[\#34483e\] {
+  color: #ffffff !important;
 }
 
-html[data-theme="dark"] .text-\[\#63726a\],
-html[data-theme="dark"] .text-\[\#4a5a51\],
-html[data-theme="dark"] .text-\[\#52665a\],
-html[data-theme="dark"] .text-\[\#708277\] {
-  color: #829489 !important;
-}
-
-/* Border overrides for Dark Mode */
-html[data-theme="dark"] .border-\[\#e5dfcf\],
-html[data-theme="dark"] .border-\[\#d6cfbe\],
-html[data-theme="dark"] .border-\[\#ded7c6\],
-html[data-theme="dark"] .border-\[\#0e261f\]\/25 {
-  border-color: #1f2621 !important;
+html[data-theme="dark"] .text-\[\#4f6158\],
+html[data-theme="dark"] .text-\[\#475950\],
+html[data-theme="dark"] .text-\[\#4e5f56\],
+html[data-theme="dark"] .text-\[\#4d5e56\],
+html[data-theme="dark"] .text-\[\#687971\],
+html[data-theme="dark"] .text-\[\#63756d\],
+html[data-theme="dark"] .text-\[\#71827a\],
+html[data-theme="dark"] .text-\[\#6c8075\],
+html[data-theme="dark"] .text-\[\#43554d\],
+html[data-theme="dark"] .text-\[\#3f5147\] {
+  color: #8c96a0 !important;
 }

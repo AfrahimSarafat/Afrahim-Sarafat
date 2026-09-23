@@ -48,7 +48,7 @@ export const Hero: React.FC<HeroProps> = ({ profile }) => {
   ];
 
   return (
-    <section className="relative pt-6 pb-16 md:pt-12 md:pb-24 overflow-hidden" aria-labelledby="hero-name">
+    <section id="hero" className="relative pt-6 pb-16 md:pt-12 md:pb-24 overflow-hidden" aria-labelledby="hero-name">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           {/* Left Column: Copy & CTAs */}
@@ -158,6 +158,8 @@ export const Hero: React.FC<HeroProps> = ({ profile }) => {
                   alt={`Portrait of ${profile.name}`}
                   className="w-full h-full object-cover object-center"
                   loading="eager"
+                  fetchPriority="high"
+                  decoding="async"
                   referrerPolicy="no-referrer"
                 />
               </div>

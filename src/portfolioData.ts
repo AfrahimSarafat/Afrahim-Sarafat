@@ -26,6 +26,7 @@ export interface VideoItem {
   youtubeId: string;
   title: string;
   type: "short-form" | "long-form";
+  subCategory?: "general" | "ui-motion";
   typeLabel: string;
   aspectRatio: "9:16" | "16:9";
   thumbnailUrl: string;
@@ -200,11 +201,13 @@ export const SERVICES_LIST: ServiceItem[] = [
 ];
 
 export const VIDEOS_LIST: VideoItem[] = [
+  // --- 1. Short-Form Video (Reels, Commercials & Socials - 9:16) ---
   {
     id: "short-1",
     youtubeId: "auaUOH8uKX0",
     title: "Cold Coffee | Cinematic Product Motion Graphics",
     type: "short-form",
+    subCategory: "general",
     typeLabel: "Short-Form · Motion Graphics",
     aspectRatio: "9:16",
     thumbnailUrl: "https://i.ytimg.com/vi/auaUOH8uKX0/hqdefault.jpg",
@@ -219,6 +222,7 @@ export const VIDEOS_LIST: VideoItem[] = [
     youtubeId: "Gh6E_CAnwMc",
     title: "Food Motion Graphics | Smooth Motion Design",
     type: "short-form",
+    subCategory: "general",
     typeLabel: "Short-Form · Food Commercial",
     aspectRatio: "9:16",
     thumbnailUrl: "https://i.ytimg.com/vi/Gh6E_CAnwMc/hqdefault.jpg",
@@ -233,6 +237,7 @@ export const VIDEOS_LIST: VideoItem[] = [
     youtubeId: "LXxdbKLUNsM",
     title: "Milma Juice — Smooth Product Animation",
     type: "short-form",
+    subCategory: "general",
     typeLabel: "Short-Form · Product Animation",
     aspectRatio: "9:16",
     thumbnailUrl: "https://i.ytimg.com/vi/LXxdbKLUNsM/hqdefault.jpg",
@@ -247,6 +252,7 @@ export const VIDEOS_LIST: VideoItem[] = [
     youtubeId: "6HjKQ680RXo",
     title: "One Decision Can Change Your Next 5 Years",
     type: "short-form",
+    subCategory: "general",
     typeLabel: "Short-Form · Storytelling Reel",
     aspectRatio: "9:16",
     thumbnailUrl: "https://i.ytimg.com/vi/6HjKQ680RXo/hqdefault.jpg",
@@ -261,6 +267,7 @@ export const VIDEOS_LIST: VideoItem[] = [
     youtubeId: "IP6B6zWU9Kc",
     title: "Documentary Motion Graphics",
     type: "short-form",
+    subCategory: "general",
     typeLabel: "Short-Form · Documentary Motion",
     aspectRatio: "9:16",
     thumbnailUrl: "https://i.ytimg.com/vi/IP6B6zWU9Kc/hqdefault.jpg",
@@ -270,11 +277,46 @@ export const VIDEOS_LIST: VideoItem[] = [
       "Documentary archival motion design featuring 2.5D parallax photo animation, paper textures, and historical film grain.",
     tags: ["Documentary", "Parallax", "Archival", "Shorts"],
   },
+
+  // --- 2. Short-Form UI Motion Videos (Mobile & Web UI Micro-Interactions - 9:16) ---
+  {
+    id: "short-ui-1",
+    youtubeId: "Y86V8fDqj7c",
+    title: "Mobile App Micro-Interactions | Sleek UI Motion",
+    type: "short-form",
+    subCategory: "ui-motion",
+    typeLabel: "Short-Form · UI Motion",
+    aspectRatio: "9:16",
+    thumbnailUrl: "https://i.ytimg.com/vi/Y86V8fDqj7c/hqdefault.jpg",
+    youtubeUrl: "https://youtube.com/shorts/Y86V8fDqj7c",
+    client: "Fintech & Mobile App UI",
+    description:
+      "Fluid micro-interactions, smooth swipe gestures, navigation transitions, and kinetic UI motion designed for modern mobile experiences.",
+    tags: ["UI Motion", "Mobile App", "Micro-Interactions", "Shorts"],
+  },
+  {
+    id: "short-ui-2",
+    youtubeId: "V_6TzC7s93U",
+    title: "Interactive SaaS Dashboard UI Animation",
+    type: "short-form",
+    subCategory: "ui-motion",
+    typeLabel: "Short-Form · UI Motion",
+    aspectRatio: "9:16",
+    thumbnailUrl: "https://i.ytimg.com/vi/V_6TzC7s93U/hqdefault.jpg",
+    youtubeUrl: "https://youtube.com/shorts/V_6TzC7s93U",
+    client: "SaaS & Web Product",
+    description:
+      "Polished SaaS web dashboard interactions, dynamic data visualization animations, and crisp button micro-effects.",
+    tags: ["UI Motion", "Dashboard", "SaaS", "Micro-Interactions"],
+  },
+
+  // --- 3. Long-Form Video Production (Documentaries, Talk Shows & Commercials - 16:9) ---
   {
     id: "long-1",
     youtubeId: "KkPZ8yY7EXY",
     title: "Al Qamar Academy Project — Video Editing & Production",
     type: "long-form",
+    subCategory: "general",
     typeLabel: "Long-Form · Documentary Edit",
     aspectRatio: "16:9",
     thumbnailUrl: "https://i.ytimg.com/vi/KkPZ8yY7EXY/hqdefault.jpg",
@@ -289,6 +331,7 @@ export const VIDEOS_LIST: VideoItem[] = [
     youtubeId: "Amyqk2GPKYI",
     title: "Why Students Want to Learn Video Editing | As-Sunnah",
     type: "long-form",
+    subCategory: "general",
     typeLabel: "Long-Form · Talk Show & Interview",
     aspectRatio: "16:9",
     thumbnailUrl: "https://i.ytimg.com/vi/Amyqk2GPKYI/hqdefault.jpg",
@@ -297,6 +340,23 @@ export const VIDEOS_LIST: VideoItem[] = [
     description:
       "Comprehensive talk show and discussion edit featuring audio balancing, cinematic color tones, engaging cutaways, and seamless flow.",
     tags: ["Long-Form", "Interview", "As-Sunnah", "Color Grading"],
+  },
+
+  // --- 4. Long-Form UI Motion Videos (App & Web UI/UX Showcase - 16:9) ---
+  {
+    id: "long-ui-1",
+    youtubeId: "0mj3vDxT55c",
+    title: "Modern UI Motion Design & App Interaction Showcase",
+    type: "long-form",
+    subCategory: "ui-motion",
+    typeLabel: "Long-Form · UI Motion",
+    aspectRatio: "16:9",
+    thumbnailUrl: "https://i.ytimg.com/vi/0mj3vDxT55c/hqdefault.jpg",
+    youtubeUrl: "https://youtu.be/0mj3vDxT55c",
+    client: "UI/UX & Interactive Design",
+    description:
+      "Comprehensive long-form UI motion design showcase presenting interactive app prototypes, responsive website animations, sleek micro-interactions, and kinetic interface workflows.",
+    tags: ["UI Motion", "Interaction Design", "App Prototype", "Showcase"],
   },
 ];
 

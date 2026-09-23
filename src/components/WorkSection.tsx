@@ -22,16 +22,42 @@ interface WorkSectionProps {
 }
 
 type MainFilter = "all" | "graphic-design" | "video-editing";
-type VideoSubFilter = "all-videos" | "short-form" | "long-form";
+type VideoSubFilter = "all-videos" | "short-form" | "short-ui" | "long-form" | "long-ui";
 
 export const WorkSection: React.FC<WorkSectionProps> = ({ onSelectProject, onSelectVideo }) => {
   const [mainFilter, setMainFilter] = useState<MainFilter>("all");
   const [videoSubFilter, setVideoSubFilter] = useState<VideoSubFilter>("all-videos");
   const [activeModalVideo, setActiveModalVideo] = useState<VideoItem | null>(null);
 
-  // Refs for smooth horizontal scrolling
+  // Single active playing video state across the entire work section:
+  // Guarantees that ONLY ONE video can ever play at any given moment.
+  const [activePlayingVideoId, setActivePlayingVideoId] = useState<string | null>(null);
+
+  // Smart device detection: whether user is on a desktop/PC environment with mouse cursor
+  const [isDesktopWithMouse, setIsDesktopWithMouse] = useState(() => {
+    if (typeof window === "undefined") return true;
+    return (
+      window.matchMedia("(hover: hover) and (pointer: fine)").matches ||
+      window.innerWidth >= 1024
+    );
+  });
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const checkDevice = () => {
+      const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+      const desktop = window.innerWidth >= 1024;
+      setIsDesktopWithMouse(fine || desktop);
+    };
+    window.addEventListener("resize", checkDevice);
+    return () => window.removeEventListener("resize", checkDevice);
+  }, []);
+
+  // Refs for smooth horizontal scrolling across each distinct section
   const shortVideosRef = useRef<HTMLDivElement>(null);
+  const shortUiVideosRef = useRef<HTMLDivElement>(null);
   const longVideosRef = useRef<HTMLDivElement>(null);
+  const longUiVideosRef = useRef<HTMLDivElement>(null);
   const graphicDesignRef = useRef<HTMLDivElement>(null);
 
   const handleVideoClick = (video: VideoItem) => {
@@ -48,8 +74,11 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ onSelectProject, onSel
     }
   };
 
-  const shortVideos = VIDEOS_LIST.filter((v) => v.type === "short-form");
-  const longVideos = VIDEOS_LIST.filter((v) => v.type === "long-form");
+  // Distinct video categories
+  const shortReels = VIDEOS_LIST.filter((v) => v.type === "short-form" && v.subCategory !== "ui-motion");
+  const shortUiVideos = VIDEOS_LIST.filter((v) => v.type === "short-form" && v.subCategory === "ui-motion");
+  const longProductionVideos = VIDEOS_LIST.filter((v) => v.type === "long-form" && v.subCategory !== "ui-motion");
+  const longUiVideos = VIDEOS_LIST.filter((v) => v.type === "long-form" && v.subCategory === "ui-motion");
 
   return (
     <section id="work" className="py-24 md:py-32 bg-[#ece7d9]" aria-labelledby="work-h">
@@ -159,9 +188,25 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ onSelectProject, onSel
                     : "bg-[#ece6d5] text-[#3f5147] hover:text-[#11241d] hover:bg-[#dad2be]"
                 }`}
               >
-                <span>Short-Form</span>
+                <span>Short-Form Video</span>
                 <span className="px-1.5 py-0.2 rounded-full bg-black/10 text-[10px]">
-                  {shortVideos.length}
+                  {shortReels.length}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setVideoSubFilter("short-ui")}
+                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-display font-bold transition-all ${
+                  videoSubFilter === "short-ui"
+                    ? "bg-[#d98d12] text-[#0e261f] shadow-sm"
+                    : "bg-[#ece6d5] text-[#3f5147] hover:text-[#11241d] hover:bg-[#dad2be]"
+                }`}
+              >
+                <Sparkles className="w-3 h-3" />
+                <span>Short-Form UI Motion</span>
+                <span className="px-1.5 py-0.2 rounded-full bg-black/10 text-[10px]">
+                  {shortUiVideos.length}
                 </span>
               </button>
 
@@ -174,9 +219,25 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ onSelectProject, onSel
                     : "bg-[#ece6d5] text-[#3f5147] hover:text-[#11241d] hover:bg-[#dad2be]"
                 }`}
               >
-                <span>Long-Form</span>
+                <span>Long-Form Production</span>
                 <span className="px-1.5 py-0.2 rounded-full bg-black/10 text-[10px]">
-                  {longVideos.length}
+                  {longProductionVideos.length}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setVideoSubFilter("long-ui")}
+                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-display font-bold transition-all ${
+                  videoSubFilter === "long-ui"
+                    ? "bg-[#d98d12] text-[#0e261f] shadow-sm"
+                    : "bg-[#ece6d5] text-[#3f5147] hover:text-[#11241d] hover:bg-[#dad2be]"
+                }`}
+              >
+                <Sparkles className="w-3 h-3" />
+                <span>Long-Form UI Motion</span>
+                <span className="px-1.5 py-0.2 rounded-full bg-black/10 text-[10px]">
+                  {longUiVideos.length}
                 </span>
               </button>
             </div>
@@ -186,23 +247,25 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ onSelectProject, onSel
         {/* ========================================================
             VIEW 1: "ALL WORKS" TAB
             Rows: 
-            1. Short-Form Videos (Single Row Slider with Left/Right Arrows)
-            2. Long-Form Videos (Single Row Slider with Left/Right Arrows)
-            3. Graphic Design (Single Row Slider with Left/Right Arrows)
+            1. Short-Form Video (Reels, Commercials - 9:16)
+            2. Short-Form UI Motion Videos (Micro-Interactions - 9:16)
+            3. Long-Form Video Production (Documentaries - 16:9)
+            4. Long-Form UI Motion Videos (App & Web Showcase - 16:9)
+            5. Graphic Design & Brand Visuals
             ======================================================== */}
         {mainFilter === "all" && (
           <div className="space-y-16 text-left">
-            {/* 1. Short-Form Videos Row */}
+            {/* 1. Short-Form Video Row */}
             <div className="relative">
               {/* Header with Title & Arrow Controls */}
               <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#d8d0bd]">
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-[#d98d12]" />
                   <h3 className="font-display font-bold text-xl sm:text-2xl text-[#11241d]">
-                    Short-Form Video Edits (9:16)
+                    Short-Form Video (9:16)
                   </h3>
                   <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-[#ded6c2] text-[#3d5045]">
-                    {shortVideos.length} Reels
+                    {shortReels.length} Reels
                   </span>
                 </div>
 
@@ -232,7 +295,6 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ onSelectProject, onSel
 
               {/* Single Row Slider */}
               <div className="relative group">
-                {/* Floating Side Arrow: Left */}
                 <button
                   type="button"
                   onClick={() => scrollContainer(shortVideosRef, "left", 320)}
@@ -242,22 +304,26 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ onSelectProject, onSel
                   <ChevronLeft className="w-5 h-5" />
                 </button>
 
-                {/* Horizontal Scroll Track (Single Line) */}
                 <div
                   ref={shortVideosRef}
                   className="flex flex-nowrap overflow-x-auto no-scrollbar scroll-smooth gap-4 sm:gap-5 pb-3 pt-1 -mx-1 px-1"
                 >
-                  {shortVideos.map((video) => (
+                  {shortReels.map((video) => (
                     <div
                       key={video.id}
                       className="w-[200px] sm:w-[240px] md:w-[260px] flex-shrink-0"
                     >
-                      <VideoCard video={video} onPlay={() => handleVideoClick(video)} />
+                      <VideoCard
+                        video={video}
+                        onPlay={() => handleVideoClick(video)}
+                        activePlayingId={activePlayingVideoId}
+                        setActivePlayingId={setActivePlayingVideoId}
+                        isDesktopWithMouse={isDesktopWithMouse}
+                      />
                     </div>
                   ))}
                 </div>
 
-                {/* Floating Side Arrow: Right */}
                 <button
                   type="button"
                   onClick={() => scrollContainer(shortVideosRef, "right", 320)}
@@ -269,7 +335,86 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ onSelectProject, onSel
               </div>
             </div>
 
-            {/* 2. Long-Form Videos Row */}
+            {/* 2. Short-Form UI Motion Videos Row */}
+            <div className="relative">
+              {/* Header with Title & Arrow Controls */}
+              <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#d8d0bd]">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#0e8388]" />
+                  <h3 className="font-display font-bold text-xl sm:text-2xl text-[#11241d]">
+                    Short-Form UI Motion Video (9:16)
+                  </h3>
+                  <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-[#ded6c2] text-[#3d5045]">
+                    {shortUiVideos.length} UI Reels
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] font-medium text-[#6c8075] hidden sm:inline">
+                    Scroll horizontally
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => scrollContainer(shortUiVideosRef, "left", 320)}
+                    className="w-8 h-8 rounded-full bg-[#dfd8c5] hover:bg-[#0e261f] text-[#11241d] hover:text-white border border-[#cfc5b0] flex items-center justify-center transition-all shadow-sm"
+                    aria-label="Scroll Short UI Videos Left"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => scrollContainer(shortUiVideosRef, "right", 320)}
+                    className="w-8 h-8 rounded-full bg-[#dfd8c5] hover:bg-[#0e261f] text-[#11241d] hover:text-white border border-[#cfc5b0] flex items-center justify-center transition-all shadow-sm"
+                    aria-label="Scroll Short UI Videos Right"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Single Row Slider */}
+              <div className="relative group">
+                <button
+                  type="button"
+                  onClick={() => scrollContainer(shortUiVideosRef, "left", 320)}
+                  className="absolute -left-3 sm:-left-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-[#0e261f]/90 hover:bg-[#d98d12] text-white hover:text-[#0e261f] shadow-xl border border-white/20 hidden md:flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
+                  aria-label="Previous short UI videos"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+
+                <div
+                  ref={shortUiVideosRef}
+                  className="flex flex-nowrap overflow-x-auto no-scrollbar scroll-smooth gap-4 sm:gap-5 pb-3 pt-1 -mx-1 px-1"
+                >
+                  {shortUiVideos.map((video) => (
+                    <div
+                      key={video.id}
+                      className="w-[200px] sm:w-[240px] md:w-[260px] flex-shrink-0"
+                    >
+                      <VideoCard
+                        video={video}
+                        onPlay={() => handleVideoClick(video)}
+                        activePlayingId={activePlayingVideoId}
+                        setActivePlayingId={setActivePlayingVideoId}
+                        isDesktopWithMouse={isDesktopWithMouse}
+                      />
+                    </div>
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => scrollContainer(shortUiVideosRef, "right", 320)}
+                  className="absolute -right-3 sm:-right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-[#0e261f]/90 hover:bg-[#d98d12] text-white hover:text-[#0e261f] shadow-xl border border-white/20 hidden md:flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
+                  aria-label="Next short UI videos"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* 3. Long-Form Video Production Row */}
             <div className="relative">
               {/* Header with Title & Arrow Controls */}
               <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#d8d0bd]">
@@ -279,7 +424,7 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ onSelectProject, onSel
                     Long-Form Video Production (16:9)
                   </h3>
                   <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-[#ded6c2] text-[#3d5045]">
-                    {longVideos.length} Videos
+                    {longProductionVideos.length} Videos
                   </span>
                 </div>
 
@@ -309,7 +454,6 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ onSelectProject, onSel
 
               {/* Single Row Slider */}
               <div className="relative group">
-                {/* Floating Side Arrow: Left */}
                 <button
                   type="button"
                   onClick={() => scrollContainer(longVideosRef, "left", 420)}
@@ -319,27 +463,110 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ onSelectProject, onSel
                   <ChevronLeft className="w-5 h-5" />
                 </button>
 
-                {/* Horizontal Scroll Track (Single Line) */}
                 <div
                   ref={longVideosRef}
                   className="flex flex-nowrap overflow-x-auto no-scrollbar scroll-smooth gap-4 sm:gap-6 pb-3 pt-1 -mx-1 px-1"
                 >
-                  {longVideos.map((video) => (
+                  {longProductionVideos.map((video) => (
                     <div
                       key={video.id}
                       className="w-[280px] sm:w-[380px] md:w-[460px] flex-shrink-0"
                     >
-                      <VideoCard video={video} onPlay={() => handleVideoClick(video)} />
+                      <VideoCard
+                        video={video}
+                        onPlay={() => handleVideoClick(video)}
+                        activePlayingId={activePlayingVideoId}
+                        setActivePlayingId={setActivePlayingVideoId}
+                        isDesktopWithMouse={isDesktopWithMouse}
+                      />
                     </div>
                   ))}
                 </div>
 
-                {/* Floating Side Arrow: Right */}
                 <button
                   type="button"
                   onClick={() => scrollContainer(longVideosRef, "right", 420)}
                   className="absolute -right-3 sm:-right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-[#0e261f]/90 hover:bg-[#d98d12] text-white hover:text-[#0e261f] shadow-xl border border-white/20 hidden md:flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
                   aria-label="Next long videos"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* 4. Long-Form UI Motion Videos Row */}
+            <div className="relative">
+              {/* Header with Title & Arrow Controls */}
+              <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#d8d0bd]">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#2a6f97]" />
+                  <h3 className="font-display font-bold text-xl sm:text-2xl text-[#11241d]">
+                    Long-Form UI Motion Video (16:9)
+                  </h3>
+                  <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-[#ded6c2] text-[#3d5045]">
+                    {longUiVideos.length} UI Showcase
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] font-medium text-[#6c8075] hidden sm:inline">
+                    Scroll horizontally
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => scrollContainer(longUiVideosRef, "left", 420)}
+                    className="w-8 h-8 rounded-full bg-[#dfd8c5] hover:bg-[#0e261f] text-[#11241d] hover:text-white border border-[#cfc5b0] flex items-center justify-center transition-all shadow-sm"
+                    aria-label="Scroll Long UI Videos Left"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => scrollContainer(longUiVideosRef, "right", 420)}
+                    className="w-8 h-8 rounded-full bg-[#dfd8c5] hover:bg-[#0e261f] text-[#11241d] hover:text-white border border-[#cfc5b0] flex items-center justify-center transition-all shadow-sm"
+                    aria-label="Scroll Long UI Videos Right"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Single Row Slider */}
+              <div className="relative group">
+                <button
+                  type="button"
+                  onClick={() => scrollContainer(longUiVideosRef, "left", 420)}
+                  className="absolute -left-3 sm:-left-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-[#0e261f]/90 hover:bg-[#d98d12] text-white hover:text-[#0e261f] shadow-xl border border-white/20 hidden md:flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
+                  aria-label="Previous long UI videos"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+
+                <div
+                  ref={longUiVideosRef}
+                  className="flex flex-nowrap overflow-x-auto no-scrollbar scroll-smooth gap-4 sm:gap-6 pb-3 pt-1 -mx-1 px-1"
+                >
+                  {longUiVideos.map((video) => (
+                    <div
+                      key={video.id}
+                      className="w-[280px] sm:w-[380px] md:w-[460px] flex-shrink-0"
+                    >
+                      <VideoCard
+                        video={video}
+                        onPlay={() => handleVideoClick(video)}
+                        activePlayingId={activePlayingVideoId}
+                        setActivePlayingId={setActivePlayingVideoId}
+                        isDesktopWithMouse={isDesktopWithMouse}
+                      />
+                    </div>
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => scrollContainer(longUiVideosRef, "right", 420)}
+                  className="absolute -right-3 sm:-right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-[#0e261f]/90 hover:bg-[#d98d12] text-white hover:text-[#0e261f] shadow-xl border border-white/20 hidden md:flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
+                  aria-label="Next long UI videos"
                 >
                   <ChevronRight className="w-5 h-5" />
                 </button>
@@ -514,17 +741,17 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ onSelectProject, onSel
             ======================================================== */}
         {mainFilter === "video-editing" && (
           <div className="space-y-14 animate-in fade-in duration-300 text-left">
-            {/* Short-Form Row */}
+            {/* 1. Short-Form Video (Reels, Commercials & Socials) */}
             {(videoSubFilter === "all-videos" || videoSubFilter === "short-form") && (
               <div className="relative">
                 <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#d8d0bd]">
                   <div className="flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-[#d98d12]" />
                     <h3 className="font-display font-bold text-xl sm:text-2xl text-[#11241d]">
-                      Short-Form Motion &amp; Reels (9:16)
+                      Short-Form Video (9:16)
                     </h3>
                     <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-[#ded6c2] text-[#3d5045]">
-                      {shortVideos.length} Reels
+                      {shortReels.length} Reels
                     </span>
                   </div>
 
@@ -566,12 +793,18 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ onSelectProject, onSel
                     ref={shortVideosRef}
                     className="flex flex-nowrap overflow-x-auto no-scrollbar scroll-smooth gap-4 sm:gap-5 pb-3 pt-1 -mx-1 px-1"
                   >
-                    {shortVideos.map((video) => (
+                    {shortReels.map((video) => (
                       <div
                         key={video.id}
                         className="w-[200px] sm:w-[240px] md:w-[260px] flex-shrink-0"
                       >
-                        <VideoCard video={video} onPlay={() => handleVideoClick(video)} />
+                        <VideoCard
+                          video={video}
+                          onPlay={() => handleVideoClick(video)}
+                          activePlayingId={activePlayingVideoId}
+                          setActivePlayingId={setActivePlayingVideoId}
+                          isDesktopWithMouse={isDesktopWithMouse}
+                        />
                       </div>
                     ))}
                   </div>
@@ -588,17 +821,96 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ onSelectProject, onSel
               </div>
             )}
 
-            {/* Long-Form Row */}
+            {/* 2. Short-Form UI Motion Videos */}
+            {(videoSubFilter === "all-videos" || videoSubFilter === "short-ui") && (
+              <div className="relative">
+                <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#d8d0bd]">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#0e8388]" />
+                    <h3 className="font-display font-bold text-xl sm:text-2xl text-[#11241d]">
+                      Short-Form UI Motion Video (9:16)
+                    </h3>
+                    <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-[#ded6c2] text-[#3d5045]">
+                      {shortUiVideos.length} UI Reels
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] font-medium text-[#6c8075] hidden sm:inline">
+                      Slide UI reels
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => scrollContainer(shortUiVideosRef, "left", 320)}
+                      className="w-8 h-8 rounded-full bg-[#dfd8c5] hover:bg-[#0e261f] text-[#11241d] hover:text-white border border-[#cfc5b0] flex items-center justify-center transition-all shadow-sm"
+                      aria-label="Scroll Short UI Videos Left"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => scrollContainer(shortUiVideosRef, "right", 320)}
+                      className="w-8 h-8 rounded-full bg-[#dfd8c5] hover:bg-[#0e261f] text-[#11241d] hover:text-white border border-[#cfc5b0] flex items-center justify-center transition-all shadow-sm"
+                      aria-label="Scroll Short UI Videos Right"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="relative group">
+                  <button
+                    type="button"
+                    onClick={() => scrollContainer(shortUiVideosRef, "left", 320)}
+                    className="absolute -left-3 sm:-left-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-[#0e261f]/90 hover:bg-[#d98d12] text-white hover:text-[#0e261f] shadow-xl border border-white/20 hidden md:flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
+                    aria-label="Previous short UI videos"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+
+                  <div
+                    ref={shortUiVideosRef}
+                    className="flex flex-nowrap overflow-x-auto no-scrollbar scroll-smooth gap-4 sm:gap-5 pb-3 pt-1 -mx-1 px-1"
+                  >
+                    {shortUiVideos.map((video) => (
+                      <div
+                        key={video.id}
+                        className="w-[200px] sm:w-[240px] md:w-[260px] flex-shrink-0"
+                      >
+                        <VideoCard
+                          video={video}
+                          onPlay={() => handleVideoClick(video)}
+                          activePlayingId={activePlayingVideoId}
+                          setActivePlayingId={setActivePlayingVideoId}
+                          isDesktopWithMouse={isDesktopWithMouse}
+                        />
+                      </div>
+                    ))}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => scrollContainer(shortUiVideosRef, "right", 320)}
+                    className="absolute -right-3 sm:-right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-[#0e261f]/90 hover:bg-[#d98d12] text-white hover:text-[#0e261f] shadow-xl border border-white/20 hidden md:flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
+                    aria-label="Next short UI videos"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* 3. Long-Form Video Production */}
             {(videoSubFilter === "all-videos" || videoSubFilter === "long-form") && (
               <div className="relative">
                 <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#d8d0bd]">
                   <div className="flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-[#1b4436]" />
                     <h3 className="font-display font-bold text-xl sm:text-2xl text-[#11241d]">
-                      Long-Form Video Production &amp; Documentaries (16:9)
+                      Long-Form Video Production (16:9)
                     </h3>
                     <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-[#ded6c2] text-[#3d5045]">
-                      {longVideos.length} Videos
+                      {longProductionVideos.length} Videos
                     </span>
                   </div>
 
@@ -640,12 +952,18 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ onSelectProject, onSel
                     ref={longVideosRef}
                     className="flex flex-nowrap overflow-x-auto no-scrollbar scroll-smooth gap-4 sm:gap-6 pb-3 pt-1 -mx-1 px-1"
                   >
-                    {longVideos.map((video) => (
+                    {longProductionVideos.map((video) => (
                       <div
                         key={video.id}
                         className="w-[280px] sm:w-[380px] md:w-[460px] flex-shrink-0"
                       >
-                        <VideoCard video={video} onPlay={() => handleVideoClick(video)} />
+                        <VideoCard
+                          video={video}
+                          onPlay={() => handleVideoClick(video)}
+                          activePlayingId={activePlayingVideoId}
+                          setActivePlayingId={setActivePlayingVideoId}
+                          isDesktopWithMouse={isDesktopWithMouse}
+                        />
                       </div>
                     ))}
                   </div>
@@ -655,6 +973,85 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ onSelectProject, onSel
                     onClick={() => scrollContainer(longVideosRef, "right", 420)}
                     className="absolute -right-3 sm:-right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-[#0e261f]/90 hover:bg-[#d98d12] text-white hover:text-[#0e261f] shadow-xl border border-white/20 hidden md:flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
                     aria-label="Next long videos"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* 4. Long-Form UI Motion Videos */}
+            {(videoSubFilter === "all-videos" || videoSubFilter === "long-ui") && (
+              <div className="relative">
+                <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#d8d0bd]">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#2a6f97]" />
+                    <h3 className="font-display font-bold text-xl sm:text-2xl text-[#11241d]">
+                      Long-Form UI Motion Video (16:9)
+                    </h3>
+                    <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-[#ded6c2] text-[#3d5045]">
+                      {longUiVideos.length} UI Showcase
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] font-medium text-[#6c8075] hidden sm:inline">
+                      Slide UI videos
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => scrollContainer(longUiVideosRef, "left", 420)}
+                      className="w-8 h-8 rounded-full bg-[#dfd8c5] hover:bg-[#0e261f] text-[#11241d] hover:text-white border border-[#cfc5b0] flex items-center justify-center transition-all shadow-sm"
+                      aria-label="Scroll Long UI Videos Left"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => scrollContainer(longUiVideosRef, "right", 420)}
+                      className="w-8 h-8 rounded-full bg-[#dfd8c5] hover:bg-[#0e261f] text-[#11241d] hover:text-white border border-[#cfc5b0] flex items-center justify-center transition-all shadow-sm"
+                      aria-label="Scroll Long UI Videos Right"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="relative group">
+                  <button
+                    type="button"
+                    onClick={() => scrollContainer(longUiVideosRef, "left", 420)}
+                    className="absolute -left-3 sm:-left-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-[#0e261f]/90 hover:bg-[#d98d12] text-white hover:text-[#0e261f] shadow-xl border border-white/20 hidden md:flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
+                    aria-label="Previous long UI videos"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+
+                  <div
+                    ref={longUiVideosRef}
+                    className="flex flex-nowrap overflow-x-auto no-scrollbar scroll-smooth gap-4 sm:gap-6 pb-3 pt-1 -mx-1 px-1"
+                  >
+                    {longUiVideos.map((video) => (
+                      <div
+                        key={video.id}
+                        className="w-[280px] sm:w-[380px] md:w-[460px] flex-shrink-0"
+                      >
+                        <VideoCard
+                          video={video}
+                          onPlay={() => handleVideoClick(video)}
+                          activePlayingId={activePlayingVideoId}
+                          setActivePlayingId={setActivePlayingVideoId}
+                          isDesktopWithMouse={isDesktopWithMouse}
+                        />
+                      </div>
+                    ))}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => scrollContainer(longUiVideosRef, "right", 420)}
+                    className="absolute -right-3 sm:-right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-[#0e261f]/90 hover:bg-[#d98d12] text-white hover:text-[#0e261f] shadow-xl border border-white/20 hidden md:flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
+                    aria-label="Next long UI videos"
                   >
                     <ChevronRight className="w-5 h-5" />
                   </button>
@@ -680,47 +1077,46 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ onSelectProject, onSel
 interface VideoCardProps {
   video: VideoItem;
   onPlay: () => void;
+  activePlayingId: string | null;
+  setActivePlayingId: React.Dispatch<React.SetStateAction<string | null>>;
+  isDesktopWithMouse: boolean;
 }
 
-const VideoCard: React.FC<VideoCardProps> = ({ video, onPlay }) => {
+const VideoCard: React.FC<VideoCardProps> = ({
+  video,
+  onPlay,
+  activePlayingId,
+  setActivePlayingId,
+  isDesktopWithMouse,
+}) => {
   const isShort = video.type === "short-form";
-  const [isHovered, setIsHovered] = useState(false);
-  const [isInView, setIsInView] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const cardRef = useRef<HTMLElement>(null);
   const hoverTimeoutRef = useRef<number | null>(null);
 
-  // Mobile / Tablet view: Play automatically when video scrolls into view
+  const isPlaying = activePlayingId === video.id;
+
+  // Mobile / Tablet view: Play automatically ONLY on mobile/tablet when this card enters central focal view.
+  // CRITICAL: On Desktop / PC, this IntersectionObserver is COMPLETELY DISABLED so scrolling NEVER autoplays!
   useEffect(() => {
+    if (isDesktopWithMouse) return;
+
     const cardEl = cardRef.current;
     if (!cardEl) return;
-
-    // Detect if device is touch or mobile/tablet screen
-    const isMobileOrTablet = () => {
-      if (typeof window === "undefined") return false;
-      return (
-        window.innerWidth < 1024 ||
-        window.matchMedia("(hover: none)").matches ||
-        "ontouchstart" in window ||
-        navigator.maxTouchPoints > 0
-      );
-    };
-
-    if (!isMobileOrTablet()) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
-            setIsInView(true);
-          } else if (entry.intersectionRatio < 0.25) {
-            setIsInView(false);
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.55) {
+            setActivePlayingId(video.id);
+          } else if (!entry.isIntersecting || entry.intersectionRatio < 0.2) {
+            setActivePlayingId((curr) => (curr === video.id ? null : curr));
           }
         });
       },
       {
-        threshold: [0, 0.25, 0.5, 0.75],
-        rootMargin: "0px",
+        threshold: [0.2, 0.55, 0.8],
+        rootMargin: "-12% 0px -12% 0px", // Focus on the central area of mobile/tablet screen
       }
     );
 
@@ -728,27 +1124,27 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onPlay }) => {
     return () => {
       observer.disconnect();
     };
-  }, []);
+  }, [video.id, isDesktopWithMouse, setActivePlayingId]);
 
-  // Desktop view: Play automatically when cursor hovers
+  // Desktop view: Play ONLY when cursor hovers on this specific video
   const handleMouseEnter = () => {
+    if (!isDesktopWithMouse) return;
     if (hoverTimeoutRef.current) {
       window.clearTimeout(hoverTimeoutRef.current);
     }
-    // 100ms debounce to prevent flashing when casually moving cursor across screen
+    // 70ms debounce so it starts smoothly and immediately when cursor rests on it
     hoverTimeoutRef.current = window.setTimeout(() => {
-      setIsHovered(true);
-    }, 100);
+      setActivePlayingId(video.id);
+    }, 70);
   };
 
   const handleMouseLeave = () => {
+    if (!isDesktopWithMouse) return;
     if (hoverTimeoutRef.current) {
       window.clearTimeout(hoverTimeoutRef.current);
     }
-    setIsHovered(false);
+    setActivePlayingId((curr) => (curr === video.id ? null : curr));
   };
-
-  const isPlaying = isHovered || isInView;
 
   return (
     <article
@@ -768,6 +1164,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onPlay }) => {
           isPlaying ? "opacity-0 scale-100" : "opacity-100 group-hover:scale-105"
         }`}
         loading="lazy"
+        decoding="async"
         referrerPolicy="no-referrer"
       />
 
@@ -908,6 +1305,7 @@ const GraphicDesignCard: React.FC<GraphicDesignCardProps> = ({ project, onClick 
         alt={project.title}
         className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
         loading="lazy"
+        decoding="async"
         referrerPolicy="no-referrer"
       />
 

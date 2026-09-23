@@ -48,66 +48,65 @@ export const Footer: React.FC<FooterProps> = ({ profile }) => {
             </p>
 
             <ul className="flex items-center gap-3 pt-2 text-[#9bb3a6]">
-              <li>
-                <a
-                  href={profile.contact.behanceUrl || "https://www.behance.net/hmsharafat"}
-                  target="_blank"
-                  rel="noreferrer"
-                  title="Behance"
-                  className="w-9 h-9 rounded-full border border-[#1f483a] hover:border-[#d98d12] hover:text-[#d98d12] flex items-center justify-center transition-all"
-                  aria-label="Behance"
-                >
-                  <BehanceIcon className="w-4 h-4" />
-                </a>
-              </li>
-              <li>
-                <a
-                  href={profile.contact.linkedinUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  title="LinkedIn"
-                  className="w-9 h-9 rounded-full border border-[#1f483a] hover:border-[#d98d12] hover:text-[#d98d12] flex items-center justify-center transition-all"
-                  aria-label="LinkedIn"
-                >
-                  <Linkedin className="w-4 h-4" />
-                </a>
-              </li>
-              <li>
-                <a
-                  href={profile.contact.instagramUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  title="Instagram"
-                  className="w-9 h-9 rounded-full border border-[#1f483a] hover:border-[#d98d12] hover:text-[#d98d12] flex items-center justify-center transition-all"
-                  aria-label="Instagram"
-                >
-                  <Instagram className="w-4 h-4" />
-                </a>
-              </li>
-              <li>
-                <a
-                  href={profile.contact.youtubeUrl || "https://www.youtube.com/@dreamongraphic"}
-                  target="_blank"
-                  rel="noreferrer"
-                  title="YouTube"
-                  className="w-9 h-9 rounded-full border border-[#1f483a] hover:border-[#d98d12] hover:text-[#d98d12] flex items-center justify-center transition-all"
-                  aria-label="YouTube"
-                >
-                  <Youtube className="w-4 h-4" />
-                </a>
-              </li>
-              <li>
-                <a
-                  href={profile.contact.facebookUrl || "https://www.facebook.com/share/1EBGJ4XRRo/"}
-                  target="_blank"
-                  rel="noreferrer"
-                  title="Facebook"
-                  className="w-9 h-9 rounded-full border border-[#1f483a] hover:border-[#d98d12] hover:text-[#d98d12] flex items-center justify-center transition-all"
-                  aria-label="Facebook"
-                >
-                  <Facebook className="w-4 h-4" />
-                </a>
-              </li>
+              {[
+                {
+                  id: "behance",
+                  name: "Behance",
+                  url: profile.contact.behanceUrl || "https://www.behance.net/hmsharafat",
+                  icon: BehanceIcon,
+                },
+                {
+                  id: "linkedin",
+                  name: "LinkedIn",
+                  url: profile.contact.linkedinUrl,
+                  icon: Linkedin,
+                },
+                {
+                  id: "instagram",
+                  name: "Instagram",
+                  url: profile.contact.instagramUrl,
+                  icon: Instagram,
+                },
+                {
+                  id: "youtube",
+                  name: "YouTube",
+                  url: profile.contact.youtubeUrl || "https://www.youtube.com/@dreamongraphic",
+                  icon: Youtube,
+                },
+                {
+                  id: "facebook",
+                  name: "Facebook Page",
+                  url: profile.contact.facebookUrl || "https://www.facebook.com/share/1EBGJ4XRRo/",
+                  icon: Facebook,
+                },
+              ].map((social) => {
+                const Icon = social.icon;
+                return (
+                  <li key={social.id} className="relative group/tooltip">
+                    <a
+                      href={social.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={social.name}
+                      className="w-9 h-9 rounded-full border border-[#1f483a] bg-[#14342b]/50 text-[#c7dad0] hover:border-[#d98d12] hover:bg-[#d98d12] hover:text-[#0b1e18] flex items-center justify-center transition-all duration-200 shadow-sm active:scale-95"
+                    >
+                      <Icon className="w-4 h-4" />
+                    </a>
+
+                    {/* Tooltip on hover */}
+                    <div
+                      role="tooltip"
+                      className="absolute -top-9 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded-md bg-[#d98d12] text-[#0b1e18] text-[11px] font-bold tracking-wide shadow-xl pointer-events-none opacity-0 group-hover/tooltip:opacity-100 -translate-y-1 group-hover/tooltip:translate-y-0 transition-all duration-150 whitespace-nowrap z-30"
+                    >
+                      {social.name}
+                      <div
+                        className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[#d98d12]"
+                        aria-hidden="true"
+                      />
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
