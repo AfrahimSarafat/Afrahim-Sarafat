@@ -277,6 +277,21 @@ export const VIDEOS_LIST: VideoItem[] = [
       "Documentary archival motion design featuring 2.5D parallax photo animation, paper textures, and historical film grain.",
     tags: ["Documentary", "Parallax", "Archival", "Shorts"],
   },
+  {
+    id: "short-6",
+    youtubeId: "VtJVOTw8oS8",
+    title: "Creative Short-Form Video Edit & Motion Design",
+    type: "short-form",
+    subCategory: "general",
+    typeLabel: "Short-Form · Commercial Reel",
+    aspectRatio: "9:16",
+    thumbnailUrl: "https://i.ytimg.com/vi/VtJVOTw8oS8/hqdefault.jpg",
+    youtubeUrl: "https://youtube.com/shorts/VtJVOTw8oS8",
+    client: "Commercial & Social Media Content",
+    description:
+      "High-energy short-form video edit featuring rapid pacing, sound design, engaging visual hooks, and seamless visual transitions.",
+    tags: ["Short-Form", "Reels", "Video Editing", "Shorts"],
+  },
 
   // --- 2. Short-Form UI Motion Videos (Mobile & Web UI Micro-Interactions - 9:16) ---
   {
@@ -357,6 +372,21 @@ export const VIDEOS_LIST: VideoItem[] = [
     description:
       "Comprehensive long-form UI motion design showcase presenting interactive app prototypes, responsive website animations, sleek micro-interactions, and kinetic interface workflows.",
     tags: ["UI Motion", "Interaction Design", "App Prototype", "Showcase"],
+  },
+  {
+    id: "long-ui-2",
+    youtubeId: "pnu50R9rO-8",
+    title: "Dynamic UI Motion & Interactive Prototype Reel",
+    type: "long-form",
+    subCategory: "ui-motion",
+    typeLabel: "Long-Form · UI Motion",
+    aspectRatio: "16:9",
+    thumbnailUrl: "https://i.ytimg.com/vi/pnu50R9rO-8/hqdefault.jpg",
+    youtubeUrl: "https://youtu.be/pnu50R9rO-8",
+    client: "Product Design & Motion Studio",
+    description:
+      "Long-form interactive UI motion study demonstrating fluid component transitions, responsive design animation, tactile micro-gestures, and cinematic product flows.",
+    tags: ["UI Motion", "Interactive Prototype", "Animation", "16:9"],
   },
 ];
 
